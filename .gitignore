@@ -1,0 +1,5 @@
+src/Sqwads.API/obj/
+src/Sqwads.API/bin/
+src/Sqwads.Infrastructure/obj/
+src/Sqwads.Domain/obj/
+src/Sqwads.Application/obj/
