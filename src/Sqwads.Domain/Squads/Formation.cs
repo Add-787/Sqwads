@@ -3,5 +3,6 @@ namespace Sqwads.Domain.Squads;
 public enum Formation
 {
     FourFourTwo,
-    FourThreeThree
+    FourThreeThree,
+    ThreeFourThree
 }
