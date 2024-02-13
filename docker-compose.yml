@@ -1,0 +1,16 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP.NET Core service.
+
+version: '3.4'
+
+services:
+  
+  sqwads.api:
+    image: sqwadsapi
+    build:
+      context: .
+      dockerfile: src/Sqwads.API/Dockerfile
+    depends_on:
+      - sqwads.db
+
+  sqwads.db:
+    image: mcr.microsoft.com/mssql/server:2019-latest 

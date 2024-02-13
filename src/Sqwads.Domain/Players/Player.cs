@@ -12,10 +12,10 @@ public class Player : Entity
     public DateTime DateOfBirth { get; private set; }
 
     [Required]
-    public string Country { get; private set; } = "Unknown";
+    public string Country { get; private set; } = "N/A";
 
     [Required]
-    public string Club { get; private set; } = "Unknown";
+    public string Club { get; private set; } = "N/A";
 
     [Required]
     public Position Position { get; private set; }
