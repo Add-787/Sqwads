@@ -2,7 +2,7 @@ using Sqwads.Domain.Common;
 
 namespace Sqwads.Application.Interfaces.Data.Repositories;
 
-public interface IRepository<TEntity> where TEntity : IEntity
+public interface IRepo<TEntity> where TEntity : IEntity
 {
     Task<TEntity?> GetByIdAsync(int id);
 

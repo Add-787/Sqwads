@@ -6,10 +6,10 @@ using Sqwads.Infrastructure.Data;
 namespace Sqwads.Infrastructure;
 
 public static class ServiceCollectionExtensions
-{
+{ 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<ApplicationDbContext>(opts => opts.UseInMemoryDatabase(configuration.GetConnectionString("ApplicationDb")));
+        services.AddDbContext<AppDbContext>(opts => opts.UseSqlServer(configuration.GetConnectionString("DbConnection")));
         return services;
     }
 

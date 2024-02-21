@@ -3,9 +3,9 @@ using Sqwads.Domain.Players;
 
 namespace Sqwads.Infrastructure.Data.Repositories;
 
-public class PlayerRepository : IRepository<Player>
+public class PlayerRepo : IRepo<Player>
 {
-    public PlayerRepository(ApplicationDbContext dbContext)
+    public PlayerRepo(AppDbContext dbContext)
     {
 
     }
