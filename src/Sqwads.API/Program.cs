@@ -5,8 +5,8 @@ using Sqwads.Infrastructure.Data;
 var builder = WebApplication.CreateBuilder(args);
 
 // Database
-var dbConnectionString = builder.Configuration.GetConnectionString("SqwadsDb") ?? throw new InvalidOperationException("Missing connection string configuration");
-builder.Services.AddSqlServer<ApplicationDbContext>(dbConnectionString);
+// var dbConnectionString = builder.Configuration.GetConnectionString("SqwadsDb") ?? throw new InvalidOperationException("Missing connection string configuration");
+// builder.Services.AddSqlServer<ApplicationDbContext>(dbConnectionString);
 
 // Add services to the container.
 var serviceCollection = builder.Services;

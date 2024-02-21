@@ -12,10 +12,11 @@ internal class UnitOfWork : IUnitOfWork
     private IDbContextTransaction? _currentTransaction;
 
     public SquadRepo Squads { get;  }
-    public bool HasActiveTransaction => throw new NotImplementedException();
+    public bool HasActiveTransaction => _currentTransaction is not null;
 
-    public UnitOfWork(AppDbContext context) {
+    public UnitOfWork(AppDbContext context, SquadRepo squads) {
         _context = context;
+        Squads = squads;
 
     }
 
@@ -51,9 +52,21 @@ internal class UnitOfWork : IUnitOfWork
 
     public void Dispose() => _context.Dispose();
 
-    public Task RollbackTransactionAsync()
+    public async Task RollbackTransactionAsync()
     {
-        throw new NotImplementedException();
+        if(_currentTransaction is null)
+        {
+            throw new InvalidOperationException("A transaction must be in progress to execute rollback.");
+        }
+        try
+        {
+            await _currentTransaction.RollbackAsync();
+        } 
+        finally
+        {
+            await _currentTransaction.DisposeAsync();
+            _currentTransaction = null;
+        }
     }
 
     public Task SaveChanges() => _context.SaveChangesAsync();
