@@ -6,6 +6,7 @@ namespace Sqwads.Domain.Squads;
 
 public class Squad : Entity
 {
+    public int Id { get; set; }
     [Required]
     public string Name { get; private set; }
 
