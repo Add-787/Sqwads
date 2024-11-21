@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Sqwads</string>
+
+    <!-- Login -->
+    <string name="login">Login</string>
+    <string name="login_email_text_label">E-mail</string>
+
+
+</resources>

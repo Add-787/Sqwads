@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="placeholder">Text</string>
+    <string name="email_error">Please provide a valid email</string>
+    <string name="login_header">Login</string>
+    <string name="login_sub_header">Please login to your account</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="app_name">Sqwads</string>
+    <string name="register_header">Register</string>
+</resources>

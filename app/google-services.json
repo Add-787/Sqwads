@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "932977409718",
+    "project_id": "sqwads-4699e",
+    "storage_bucket": "sqwads-4699e.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932977409718:android:6ab5585f693c31fc747017",
+        "android_client_info": {
+          "package_name": "com.psyluckco.sqwads"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDU8zUUZ2f8sEsl460mV92kwgDi4UPdT-E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
