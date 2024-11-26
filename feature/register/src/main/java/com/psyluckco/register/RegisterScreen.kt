@@ -9,9 +9,13 @@ package com.psyluckco.register
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AccountCircle
@@ -35,7 +39,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.psyluckco.sqwads.core.design.Constants
 import com.psyluckco.sqwads.core.design.component.AppWrapper
+import com.psyluckco.sqwads.core.design.component.DefaultClickableLink
 import com.psyluckco.sqwads.core.design.component.DefaultPasswordField
 import com.psyluckco.sqwads.core.design.component.DefaultTextButton
 import com.psyluckco.sqwads.core.design.component.DefaultTextField
@@ -104,8 +110,9 @@ fun RegisterScreen(
     val context = LocalContext.current
 
     AppWrapper(modifier = modifier) {
-        RegisterHeader()
-        Spacer(modifier = Modifier.height(60.dp))
+        RegisterHeader(
+            onEvent = onEvent
+        )
         TextFieldSection(
             uiState = uiState,
             onEvent = onEvent,
@@ -114,19 +121,59 @@ fun RegisterScreen(
             passwordFocusRequester = passwordFocusRequester,
             confirmPasswordFocusRequester = confirmPasswordFocusRequester
         )
-        Spacer(modifier = Modifier.height(60.dp))
-        RegisterButtonSection(onEvent = onEvent)
+
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            DefaultTextButton(text = AppText.register_button, modifier = Modifier.fillMaxWidth()) {
+                onEvent(RegisterEvent.OnRegisterClicked)
+            }
+        }
+
     }
 
 }
 
 @Composable
-fun RegisterHeader(modifier: Modifier = Modifier) {
-    HeaderWrapper(modifier = modifier) {
-        Text(
-            text = stringResource(id = AppText.register_header),
-            style = MaterialTheme.typography.displayMedium
-        )
+fun RegisterHeader(
+    onEvent: (RegisterEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    HeaderWrapper(modifier = modifier
+        .fillMaxWidth()
+    ) {
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        ) {
+            Text(
+                text = stringResource(AppText.register_header),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(9.dp))
+            Row {
+                Text(
+                    text = stringResource(id = AppText.register_sub_header),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                DefaultClickableLink(
+                    label = Constants.SIGN_IN,
+                    style = MaterialTheme.typography.titleSmall
+                ) {
+                    onEvent(RegisterEvent.OnAlreadyHaveAccountClick)
+                }
+            }
+
+        }
+
     }
 }
 
@@ -185,17 +232,9 @@ fun RegisterButtonSection(
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-        DefaultTextButton(text = AppText.register_button) {
+        DefaultTextButton(text = AppText.register_button, modifier = Modifier.fillMaxWidth()) {
             onEvent(RegisterEvent.OnRegisterClicked)
         }
-        Spacer(modifier = Modifier.height(28.dp))
-        DefaultTextButton(text = AppText.placeholder) {
-            onEvent(RegisterEvent.OnAlreadyHaveAccountClick)
-        }
-        HyperlinkText(
-            fullText = "Already a user? Sign In.",
-            hyperLinks = persistentMapOf()
-        )
     }
 }
 

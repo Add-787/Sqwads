@@ -75,8 +75,6 @@ internal fun LoginRoute(
         }
     }
 
-    if(uiState.loadingState is LoadingState.Loading) SqwadsProgressLoadingDialog(id = AppText.placeholder)
-
     LoginScreen(
         uiState = uiState,
         onEvent = viewModel::onEvent
@@ -90,6 +88,8 @@ fun LoginScreen(
     onEvent: (LoginEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
+    if(uiState.loadingState is LoadingState.Loading) SqwadsProgressLoadingDialog(id = AppText.placeholder)
 
     AppWrapper(modifier.background(color = MaterialTheme.colorScheme.background)) {
         LoginHeader(

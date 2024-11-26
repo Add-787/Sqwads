@@ -34,7 +34,7 @@ class SqwadsAppState(
                 snackbarHostState.showSnackbar(
                     text,
                     withDismissAction = true,
-                    duration = snackbarMessage.second ?: SnackbarDuration.Short
+                    duration = snackbarMessage.second ?: SnackbarDuration.Indefinite
                 )
                 snackbarManager.clean()
             }

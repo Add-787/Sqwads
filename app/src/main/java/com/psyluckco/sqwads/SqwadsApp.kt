@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -42,6 +43,9 @@ fun SqwadsApp(
     
     Surface(color = MaterialTheme.colorScheme.background, modifier = Modifier.fillMaxSize()) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = appState.snackbarHostState)
+            },
             contentWindowInsets = WindowInsets(0,0,0,0)
         ) {
             SqwadsNavHost(
@@ -65,9 +69,7 @@ fun resources() : Resources {
 @Composable
 fun rememberAppState(
     navController: NavHostController = rememberNavController(),
-    snackbarHostState: SnackbarHostState = remember {
-        SnackbarHostState()
-    },
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
     coroutineScope: CoroutineScope = rememberCoroutineScope()

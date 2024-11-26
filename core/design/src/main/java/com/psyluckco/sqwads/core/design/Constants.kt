@@ -9,4 +9,5 @@ package com.psyluckco.sqwads.core.design
 
 object Constants {
     const val SIGN_UP = "Sign Up"
+    const val SIGN_IN = "Sign In"
 }
