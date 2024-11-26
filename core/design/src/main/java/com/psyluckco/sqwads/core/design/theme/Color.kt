@@ -8,7 +8,7 @@ package com.psyluckco.sqwads.core.design.theme
 
 import androidx.compose.ui.graphics.Color
 
-val sqwads_theme_light_primary = Color(0xFF000000)
+val sqwads_theme_light_primary = Color(0xFF43A047)
 val sqwads_theme_light_onPrimary = Color(0xFFFFFFFF)
 val sqwads_theme_light_primaryContainer = Color(0xFF43A047)
 val sqwads_theme_light_onPrimaryContainer = Color(0xFF002018)

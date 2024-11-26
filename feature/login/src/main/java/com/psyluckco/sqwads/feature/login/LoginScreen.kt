@@ -2,11 +2,16 @@ package com.psyluckco.sqwads.feature.login
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -24,15 +29,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.psyluckco.sqwads.core.design.Constants
+import com.psyluckco.sqwads.core.design.IconType
 import com.psyluckco.sqwads.core.design.component.AppWrapper
+import com.psyluckco.sqwads.core.design.component.DayHeader
+import com.psyluckco.sqwads.core.design.component.DefaultActionButton
+import com.psyluckco.sqwads.core.design.component.DefaultClickableLink
 import com.psyluckco.sqwads.core.design.component.DefaultPasswordField
 import com.psyluckco.sqwads.core.design.component.DefaultTextButton
 import com.psyluckco.sqwads.core.design.component.DefaultTextField
 import com.psyluckco.sqwads.core.design.component.HeaderWrapper
+import com.psyluckco.sqwads.core.design.component.HyperlinkText
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
+import kotlinx.collections.immutable.persistentMapOf
 import com.psyluckco.sqwads.core.design.R.string as AppText
+import com.psyluckco.sqwads.core.design.R.drawable as AppDrawable
 
 @Composable
 internal fun LoginRoute(
@@ -79,7 +92,9 @@ fun LoginScreen(
 ) {
 
     AppWrapper(modifier.background(color = MaterialTheme.colorScheme.background)) {
-        LoginHeader()
+        LoginHeader(
+            onEvent = onEvent
+        )
 
         Column(
             modifier = modifier.fillMaxSize(),
@@ -90,6 +105,7 @@ fun LoginScreen(
                 modifier = modifier
                     .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(30.dp)
             ) {
 
                 DefaultTextField(
@@ -99,29 +115,32 @@ fun LoginScreen(
                     onValueChange = { onEvent(LoginEvent.OnEmailChanged(it)) }
                 )
 
-                Spacer(modifier = Modifier.height(30.dp))
+                Column(
+                    horizontalAlignment = Alignment.End,
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    DefaultPasswordField(
+                        value = uiState.password,
+                        label = AppText.placeholder,
+                        leadingIcon = Icons.Default.Lock,
+                        onValueChange = { onEvent(LoginEvent.OnPasswordChanged(it)) }
+                    )
 
-                DefaultPasswordField(
-                    value = uiState.password,
-                    label = AppText.placeholder,
-                    leadingIcon = Icons.Default.Lock,
-                    onValueChange = { onEvent(LoginEvent.OnPasswordChanged(it)) }
-                )
+                    DefaultClickableLink(label = "Forgot Password?", style = MaterialTheme.typography.titleSmall) {
 
-                Spacer(modifier = Modifier.height(75.dp))
+                    }
+                }
 
-                DefaultTextButton(text = AppText.login_button) {
+                DefaultTextButton(text = AppText.login_button, modifier = Modifier.fillMaxWidth()) {
                     onEvent(LoginEvent.OnLoginClicked)
                 }
 
-                Spacer(modifier = Modifier.height(30.dp))
+                DayHeader(dayString = stringResource(id = AppText.other_auth_options_text))
 
-                Text(text = stringResource(id = AppText.placeholder))
-
-                Spacer(modifier = Modifier.height(30.dp))
-
-                DefaultTextButton(text = AppText.register_button) {
-                    onEvent(LoginEvent.OnRegisterClicked)
+                DefaultActionButton(
+                    iconType = IconType.Bitmap(painterId = AppDrawable.google),
+                    buttonSize = 80.dp
+                ) {
 
                 }
                 
@@ -133,22 +152,44 @@ fun LoginScreen(
 }
 
 @Composable
-fun LoginHeader(modifier: Modifier = Modifier) {
+fun LoginHeader(
+    onEvent: (LoginEvent) -> Unit,
+    modifier: Modifier = Modifier
+) {
     HeaderWrapper(modifier = modifier
         .fillMaxWidth()
     ) {
-        Text(
-            text = stringResource(AppText.login_header),
-            style = MaterialTheme.typography.displaySmall,
-            color = MaterialTheme.colorScheme.onBackground
-        )
-        Text(
-            text = stringResource(AppText.login_sub_header),
-            style = MaterialTheme.typography.titleMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-            minLines = 1,
-            textAlign = TextAlign.Center
-        )
+
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom,
+            modifier = modifier
+                .fillMaxWidth()
+                .height(150.dp)
+        ) {
+            Text(
+                text = stringResource(AppText.login_header),
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+            Spacer(modifier = Modifier.height(9.dp))
+            Row {
+                Text(
+                    text = stringResource(id = AppText.login_sub_header),
+                    style = MaterialTheme.typography.titleSmall,
+                    color = MaterialTheme.colorScheme.onBackground,
+                )
+                Spacer(modifier = Modifier.width(2.dp))
+                DefaultClickableLink(
+                    label = Constants.SIGN_UP,
+                    style = MaterialTheme.typography.titleSmall
+                ) {
+                        onEvent(LoginEvent.OnRegisterClicked)
+                }
+            }
+
+        }
+
     }
 }
 
