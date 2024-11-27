@@ -55,9 +55,6 @@ internal fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-//    val onEvent by rememberUpdatedState(
-//        newValue = { event : LoginEvent -> viewModel.onEvent(event)}
-//    )
 
     val navigationState by viewModel.navigationState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = navigationState) {

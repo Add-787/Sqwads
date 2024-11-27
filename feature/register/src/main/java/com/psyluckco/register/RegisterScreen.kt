@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -110,9 +111,13 @@ fun RegisterScreen(
     val context = LocalContext.current
 
     AppWrapper(modifier = modifier) {
+
         RegisterHeader(
             onEvent = onEvent
         )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
         TextFieldSection(
             uiState = uiState,
             onEvent = onEvent,
@@ -123,7 +128,7 @@ fun RegisterScreen(
         )
 
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.height(200.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
             DefaultTextButton(text = AppText.register_button, modifier = Modifier.fillMaxWidth()) {
@@ -190,7 +195,7 @@ private fun TextFieldSection(
 
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(19.dp)) {
         DefaultTextField(
             value = uiState.userName,
             label = AppText.placeholder,
@@ -231,7 +236,7 @@ fun RegisterButtonSection(
     onEvent: (RegisterEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(modifier = modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         DefaultTextButton(text = AppText.register_button, modifier = Modifier.fillMaxWidth()) {
             onEvent(RegisterEvent.OnRegisterClicked)
         }

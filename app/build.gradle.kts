@@ -34,6 +34,7 @@ dependencies {
     implementation(projects.feature.register)
     implementation(projects.feature.login)
     implementation(projects.feature.home)
+    implementation(projects.feature.forgotPassword)
 
     implementation(projects.core.firebase)
     implementation(projects.core.design)

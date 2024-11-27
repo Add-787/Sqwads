@@ -11,4 +11,6 @@
     <string name="other_auth_options_text">or sign up with</string>
     <string name="login_sub_header_link">Sign Up</string>
     <string name="register_sub_header">Already have an account?</string>
+    <string name="forgot_password_header">Forgot Password</string>
+    <string name="forgot_password_sub_header">Provide recovery steps for email</string>
 </resources>
