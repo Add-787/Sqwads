@@ -101,8 +101,8 @@ fun DefaultTextButton(
     ) {
         if(leadingIcon != null) {
             Icon(imageVector = leadingIcon, contentDescription = null, modifier = Modifier
-                .size(40.dp)
-                .padding(end = 5.dp))
+                .size(19.dp)
+                .padding(end = 4.dp))
         }
         Text(style = MaterialTheme.typography.labelLarge, text = stringResource(id = text))
 

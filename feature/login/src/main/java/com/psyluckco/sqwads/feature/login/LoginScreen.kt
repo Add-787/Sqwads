@@ -124,7 +124,7 @@ fun LoginScreen(
                     )
 
                     DefaultClickableLink(label = "Forgot Password?", style = MaterialTheme.typography.titleSmall) {
-
+                        onEvent(LoginEvent.OnForgotPasswordClicked)
                     }
                 }
 

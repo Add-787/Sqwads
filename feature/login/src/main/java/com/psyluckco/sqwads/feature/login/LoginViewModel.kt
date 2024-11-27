@@ -39,7 +39,7 @@ class LoginViewModel @Inject constructor(
     fun onEvent(event: LoginEvent) {
         when(event) {
             is LoginEvent.OnEmailChanged -> _uiState.update { it.copy(email = event.email) }
-            is LoginEvent.OnForgotPasswordClicked -> TODO()
+            is LoginEvent.OnForgotPasswordClicked -> _navigationState.update { NavigationState.NavigateToForgotPassword }
             is LoginEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
             is LoginEvent.OnLoginClicked -> { onLoginClick() }
             is LoginEvent.OnPasswordChanged -> _uiState.update { it.copy(password = event.password) }

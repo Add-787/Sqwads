@@ -5,11 +5,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +32,10 @@ import com.psyluckco.sqwads.core.design.component.DefaultClickableLink
 import com.psyluckco.sqwads.core.design.component.DefaultTextButton
 import com.psyluckco.sqwads.core.design.component.DefaultTextField
 import com.psyluckco.sqwads.core.design.component.HeaderWrapper
+import com.psyluckco.sqwads.core.design.component.SqwadsProgressIndicator
+import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
+import com.psyluckco.sqwads.core.model.LoadingState
 
 @Composable
 internal fun ForgotPasswordRoute(
@@ -39,8 +44,18 @@ internal fun ForgotPasswordRoute(
 ) {
 
     val email by viewModel.email.collectAsStateWithLifecycle()
-
     val loadingState by viewModel.loadingState.collectAsStateWithLifecycle()
+
+    if(loadingState is LoadingState.Loading) {
+        SqwadsProgressLoadingDialog(id = R.string.placeholder)
+    }
+
+    ForgotPasswordScreen(
+        email,
+        onEmailChange = viewModel::onEmailChange,
+        onResetPasswordClick = { viewModel.sendPasswordResetEmail { clearAndNavigateLogin() }},
+        backToLoginClick = { clearAndNavigateLogin() }
+    )
 
 }
 
@@ -53,13 +68,15 @@ fun ForgotPasswordScreen(
     modifier: Modifier = Modifier
 ) {
 
-    AppWrapper {
+    AppWrapper(modifier = Modifier.fillMaxSize()) {
         ForgotPasswordHeader()
 
         Column(
-            modifier = modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceEvenly
+            modifier = modifier,
+            verticalArrangement = Arrangement.spacedBy(64.dp)
         ) {
+
+            Spacer(modifier = Modifier.height(45.dp))
             
             DefaultTextField(
                 value = email,
@@ -70,21 +87,20 @@ fun ForgotPasswordScreen(
 
             Column(
                 modifier = modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 DefaultTextButton(
-                    text = R.string.placeholder,
-                    modifier = modifier.fillMaxWidth()
-                ) {
-                    
-                }
+                    text = R.string.password_recovery_button,
+                    modifier = modifier.fillMaxWidth(),
+                    onClick = onResetPasswordClick
+                )
                 DayHeader(dayString = "Or you can")
                 DefaultTextButton(
-                    text = R.string.placeholder,
-                    modifier = modifier.fillMaxWidth()
-                ) {
-
-                }
+                    leadingIcon = Icons.Default.ArrowBack,
+                    text = R.string.back_to_login_button,
+                    modifier = modifier.fillMaxWidth(),
+                    onClick = backToLoginClick
+                )
             }
 
         }

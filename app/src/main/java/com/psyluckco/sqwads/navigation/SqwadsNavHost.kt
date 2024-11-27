@@ -10,6 +10,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.psyluckco.forgot_password.forgotPasswordScreen
+import com.psyluckco.forgot_password.navigateToForgotPassword
 import com.psyluckco.register.navigateToRegister
 import com.psyluckco.register.registerScreen
 import com.psyluckco.sqwads.SqwadsAppState
@@ -37,7 +39,7 @@ fun SqwadsNavHost(
         loginScreen(
             navigateToHome = navHostController::navigateToHome,
             navigateToRegister = navHostController::navigateToRegister,
-            navigateToForgotPassword = { }
+            navigateToForgotPassword = navHostController::navigateToForgotPassword
         )
 
         homeScreen(
@@ -47,8 +49,11 @@ fun SqwadsNavHost(
 
         registerScreen(
             navigateToLogin = navHostController::navigateToLogin,
-            navigateToHome = { }
+            navigateToHome = navHostController::navigateToHome
         )
+
+        forgotPasswordScreen(navigateToLogin = navHostController::navigateToLogin)
+
     }
 
 }

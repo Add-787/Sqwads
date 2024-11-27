@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun AppWrapper(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit = {}) {
     val scrollState = rememberScrollState()
-
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -32,11 +31,14 @@ fun AppWrapper(modifier: Modifier = Modifier, content: @Composable ColumnScope.(
             .statusBarsPadding()
     ) {
         Column(
-            modifier = Modifier.verticalScroll(scrollState),
+            // modifier = modifier.verticalScroll(scrollState),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             content()
+
         }
+
     }
 }
 

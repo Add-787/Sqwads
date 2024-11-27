@@ -18,6 +18,6 @@ fun NavGraphBuilder.forgotPasswordScreen(
     navigateToLogin: () -> Unit
 ) {
     composable<ForgotPassword> {
-
+        ForgotPasswordRoute(clearAndNavigateLogin = navigateToLogin)
     }
 }

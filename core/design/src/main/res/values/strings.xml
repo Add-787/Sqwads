@@ -13,4 +13,6 @@
     <string name="register_sub_header">Already have an account?</string>
     <string name="forgot_password_header">Forgot Password</string>
     <string name="forgot_password_sub_header">Provide recovery steps for email</string>
+    <string name="back_to_login_button">Login</string>
+    <string name="password_recovery_button">Recover</string>
 </resources>
