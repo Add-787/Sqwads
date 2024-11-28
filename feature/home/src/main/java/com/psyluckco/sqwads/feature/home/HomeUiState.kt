@@ -1,6 +1,7 @@
 package com.psyluckco.sqwads.feature.home
 
 data class HomeUiState(
+    val userName: String = "Unknown",
     val isLoading : Boolean = false
 )
 

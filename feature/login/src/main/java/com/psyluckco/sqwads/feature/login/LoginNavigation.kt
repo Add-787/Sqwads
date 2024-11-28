@@ -19,7 +19,7 @@ fun NavController.navigateToLogin(
 }
 
 fun NavGraphBuilder.loginScreen(
-    navigateToHome: (String) -> Unit,
+    navigateToHome: () -> Unit,
     navigateToRegister: () -> Unit,
     navigateToForgotPassword: () -> Unit
 ) {

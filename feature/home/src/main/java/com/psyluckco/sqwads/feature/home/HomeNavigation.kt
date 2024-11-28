@@ -1,5 +1,6 @@
 package com.psyluckco.sqwads.feature.home
 
+import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
@@ -8,13 +9,13 @@ import androidx.navigation.navOptions
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Home(val userId: String)
+data object Home
 
-fun NavController.navigateToHome(userId: String ,navOptions: NavOptions? = navOptions {
+fun NavController.navigateToHome(navOptions: NavOptions? = navOptions {
     popUpTo(0) { inclusive = true }
     launchSingleTop = true
 }) {
-    navigate(Home(userId), navOptions)
+    navigate(Home, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -22,8 +23,9 @@ fun NavGraphBuilder.homeScreen(
     navigateToProfile: () -> Unit
 ) {
     composable<Home> {
-        // Using savedStateHandle in VM can be better
-        val userId = it.arguments?.getString("userId")
-        HomeRoute(userId = userId ?: "",navigateToSquad = navigateToSquad, navigateToProfile = navigateToProfile)
+        HomeRoute(
+            navigateToSquad = navigateToSquad,
+            navigateToProfile = navigateToProfile
+        )
     }
 }

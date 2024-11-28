@@ -6,6 +6,7 @@
 
 package com.psyluckco.sqwads.feature.home
 
+import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,6 +16,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
+    private val accountService: AccountService,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -23,6 +25,10 @@ class HomeViewModel @Inject constructor(
 
     private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
     val navigationState = _navigationState.asStateFlow()
+
+    init {
+
+    }
 
     fun onEvent(event: HomeUiEvent) {
         when(event) {

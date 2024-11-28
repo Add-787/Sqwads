@@ -1,3 +1,5 @@
+import com.psyluckco.sqwads.build_logic.convention.implementation
+
 plugins {
     alias(libs.plugins.sqwads.android.feature)
     alias(libs.plugins.sqwads.android.library.compose)
@@ -11,10 +13,7 @@ android {
 
 dependencies {
 
-    implementation(projects.core.design)
-    implementation(projects.core.common)
-    implementation(projects.core.model)
-
+    implementation(projects.core.firebase)
     implementation(libs.androidx.navigation.compose)
 
 }

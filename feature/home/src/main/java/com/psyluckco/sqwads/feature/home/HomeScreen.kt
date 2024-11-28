@@ -20,7 +20,6 @@ import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 
 @Composable
 internal fun HomeRoute(
-    userId: String,
     navigateToSquad: (String) -> Unit,
     navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
@@ -51,7 +50,7 @@ internal fun HomeRoute(
             if(uiState.isLoading) {
                 SqwadsProgressLoadingDialog(id = com.psyluckco.sqwads.core.design.R.string.placeholder)
             }
-            HomeScreen(uiState = uiState, userId = userId, onEvent = { event -> onEvent(event) })
+            HomeScreen(uiState = uiState, onEvent = { event -> onEvent(event) })
         }
     }
     
@@ -61,13 +60,12 @@ internal fun HomeRoute(
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
-    userId : String,
     onEvent: (HomeUiEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(
-            text = "Welcome to Home Screen\nUser ID: $userId",
+            text = "Welcome to Home Screen\nUser ID:",
             style = MaterialTheme.typography.titleLarge,
             textAlign = TextAlign.Center
         )
@@ -78,7 +76,6 @@ fun HomeScreen(
 @Preview(showBackground = true)
 fun HomeScreenPreview() {
     HomeScreen(
-        userId = "4ercdff",
         uiState = HomeUiState(isLoading = false),
         onEvent = {}
     )

@@ -56,7 +56,7 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun RegisterRoute(
-    navigateToHome: (String) -> Unit,
+    navigateToHome: () -> Unit,
     navigateToLogin: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: RegisterViewModel = hiltViewModel()
@@ -72,7 +72,7 @@ internal fun RegisterRoute(
         }
         with(navigationState) {
             when(this) {
-                is NavigationState.NavigateToHome -> performNavigation { navigateToHome(this.userId) }
+                is NavigationState.NavigateToHome -> performNavigation { navigateToHome() }
                 NavigationState.NavigateToLogin -> performNavigation(navigateToLogin)
                 NavigationState.None -> Unit
             }
