@@ -3,6 +3,8 @@ package com.psyluckco.firebase.di
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.database
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,4 +16,7 @@ object FirebaseModule {
 
     @Provides
     fun auth(): FirebaseAuth = Firebase.auth
+
+    @Provides
+    fun database() : FirebaseDatabase = Firebase.database
 }

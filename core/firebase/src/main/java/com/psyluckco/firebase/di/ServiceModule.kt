@@ -13,4 +13,5 @@ interface ServiceModule {
 
     @Binds
     fun provideAccountService(impl: AccountServiceImpl): AccountService
+
 }

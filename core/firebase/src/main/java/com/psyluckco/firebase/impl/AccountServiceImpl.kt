@@ -25,6 +25,9 @@ class AccountServiceImpl @Inject constructor(
     override val userId: String?
         get() = auth.currentUser?.uid
 
+    override val displayName: String?
+        get() = auth.currentUser?.displayName
+
     override val isEmailVerified: Boolean
         get() = auth.currentUser?.isEmailVerified == true
 

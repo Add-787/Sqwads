@@ -70,8 +70,6 @@ class RegisterViewModel @Inject constructor(
 
         if(!formValidation()) return@launchCatching
 
-
-
         authenticationRepository.signUpWithEmailAndPassword(email.trim(), password, userName)
             .onSuccess {
 

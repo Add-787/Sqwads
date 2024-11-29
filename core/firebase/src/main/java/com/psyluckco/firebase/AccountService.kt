@@ -11,6 +11,7 @@ typealias UpdatePasswordResponse = Response<Boolean>
 
 interface AccountService {
     val userId : String?
+    val displayName: String?
     val isEmailVerified: Boolean
     val email: String?
     val firebaseUser: FirebaseUser?

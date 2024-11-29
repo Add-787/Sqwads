@@ -6,6 +6,7 @@
 
 package com.psyluckco.sqwads.core.data.repository.impl
 
+import com.google.firebase.auth.userProfileChangeRequest
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
@@ -33,6 +34,12 @@ class AuthenticationRepositoryImpl @Inject constructor(
     ): Result<String> = runCatchingWithContext(ioDispatcher) {
         val result = accountService.firebaseSignUpWithEmailAndPassword(email, password)
         accountService.sendEmailVerification()
+
+        val profileNameUpdate = userProfileChangeRequest {
+            displayName = fullName
+        }
+        result.user?.updateProfile(profileNameUpdate)
+
         return@runCatchingWithContext result.user?.uid.toString()
     }
 }

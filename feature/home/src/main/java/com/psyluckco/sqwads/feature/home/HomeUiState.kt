@@ -1,8 +1,10 @@
 package com.psyluckco.sqwads.feature.home
 
+import com.psyluckco.sqwads.core.model.LoadingState
+
 data class HomeUiState(
-    val userName: String = "Unknown",
-    val isLoading : Boolean = false
+    val displayName : String = "Unknown",
+    val isLoading : LoadingState = LoadingState.Idle
 )
 
 sealed class HomeUiEvent {

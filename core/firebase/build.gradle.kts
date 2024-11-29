@@ -1,6 +1,9 @@
+import com.psyluckco.sqwads.build_logic.convention.implementation
+
 plugins {
     alias(libs.plugins.sqwads.android.library)
     alias(libs.plugins.sqwads.android.hilt)
+    alias(libs.plugins.sqwads.android.application.firebase)
 }
 
 android {
@@ -9,9 +12,6 @@ android {
 
 dependencies {
     implementation(projects.core.model)
-    implementation(libs.firebase.storage)
-    implementation(libs.firebase.firestore)
-    implementation(libs.firebase.auth)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

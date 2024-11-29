@@ -12,7 +12,6 @@ android {
 }
 
 dependencies {
-
     implementation(projects.core.firebase)
     implementation(libs.androidx.navigation.compose)
 

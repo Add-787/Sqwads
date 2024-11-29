@@ -37,7 +37,7 @@ fun SqwadsApp(
 ) {
 
     val startDestination: Any = when(accountState) {
-        AccountState.UserAlreadySignIn -> Home(userId = "ybjbj")
+        AccountState.UserAlreadySignIn -> Home
         else -> Login
     }
     

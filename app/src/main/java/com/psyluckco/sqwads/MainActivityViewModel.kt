@@ -41,7 +41,7 @@ class MainActivityViewModel @Inject constructor(
         viewModelScope.launch {
             runCatching {
                 if(accountService.isEmailVerified) {
-                    accountService.firebaseUser?.getIdToken(true)?.await()?.token?. let {
+                    accountService.firebaseUser?.getIdToken(true)?.await()?.token?.let {
                         _accountState.update { AccountState.UserAlreadySignIn }
                     }
                 } else {
