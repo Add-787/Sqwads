@@ -1,4 +1,5 @@
 package com.psyluckco.firebase
 
-interface RealtimeService {
+interface RoomService {
+
 }

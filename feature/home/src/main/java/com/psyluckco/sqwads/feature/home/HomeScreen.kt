@@ -2,8 +2,10 @@ package com.psyluckco.sqwads.feature.home
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,10 +15,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,7 +29,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +38,7 @@ import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun HomeRoute(
@@ -78,8 +82,16 @@ fun HomeScreen(
             displayName = uiState.displayName
         )
 
+        CreateNewRoomCard(
+            navigateToNewRoom = { }
+        )
+
+        
+
     }
 }
+
+
 
 @Composable
 fun HomeHeader(
@@ -123,13 +135,17 @@ fun HomeHeader(
 
 }
 
+
+
 @Composable
 @Preview(showBackground = true)
 fun HomeScreenPreview() {
-    HomeScreen(
-        uiState = HomeUiState(displayName = "Mark", isLoading = LoadingState.Idle),
-        onEvent = {}
-    )
+    SqwadsTheme {
+        HomeScreen(
+            uiState = HomeUiState(displayName = "Mark", isLoading = LoadingState.Idle),
+            onEvent = {}
+        )
+    }
 }
 
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
@@ -140,5 +156,59 @@ private fun HomeScreenDarkPreview() {
             uiState = HomeUiState(displayName = "Mark", isLoading = LoadingState.Idle),
             onEvent = { }
         )
+    }
+}
+
+@Composable
+private fun CreateNewRoomCard(
+    modifier: Modifier = Modifier,
+    navigateToNewRoom: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .height(150.dp)
+            .fillMaxWidth()
+            .clickable { navigateToNewRoom() },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 28.dp
+        )
+    ) {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(11.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Text(text = stringResource(id = AppText.placeholder_section_text))
+            }
+
+            Icon(
+                imageVector = Icons.Default.AddCircle,
+                contentDescription = null,
+                modifier = Modifier.size(90.dp)
+            )
+        }
+
+    }
+}
+
+@Composable
+fun JoinRoomsSection() {
+    Column {
+
+        Text(
+            text = stringResource(id = AppText.placeholder),
+            style = MaterialTheme.typography.displayMedium
+        )
+
+
     }
 }
