@@ -11,4 +11,5 @@ android {
 
 dependencies {
 
+    implementation(libs.firebase.firestore.ktx)
 }

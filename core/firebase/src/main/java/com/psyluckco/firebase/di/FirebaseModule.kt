@@ -5,6 +5,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.database
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.firestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,5 +20,5 @@ object FirebaseModule {
     fun auth(): FirebaseAuth = Firebase.auth
 
     @Provides
-    fun database() : FirebaseDatabase = Firebase.database
+    fun db() : FirebaseFirestore = Firebase.firestore
 }
