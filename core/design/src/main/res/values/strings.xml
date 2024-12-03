@@ -15,4 +15,5 @@
     <string name="forgot_password_sub_header">Provide recovery steps for email</string>
     <string name="back_to_login_button">Login</string>
     <string name="password_recovery_button">Recover</string>
+    <string name="placeholder_section_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</string>
 </resources>
