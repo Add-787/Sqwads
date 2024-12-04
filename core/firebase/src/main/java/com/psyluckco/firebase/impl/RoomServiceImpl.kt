@@ -10,19 +10,17 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
-import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.CreateRoomResponse
 import com.psyluckco.firebase.GetOpenRoomsResponse
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.sqwads.core.model.Response
-import com.psyluckco.sqwads.core.model.Room
+import com.psyluckco.sqwads.core.model.firebase.Room
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.suspendCancellableCoroutine
 import javax.inject.Inject
 import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
 
 class RoomServiceImpl @Inject constructor(
     private val db : FirebaseFirestore,

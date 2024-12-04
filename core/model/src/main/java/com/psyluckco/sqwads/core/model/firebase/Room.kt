@@ -1,4 +1,4 @@
-package com.psyluckco.sqwads.core.model
+package com.psyluckco.sqwads.core.model.firebase
 
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue

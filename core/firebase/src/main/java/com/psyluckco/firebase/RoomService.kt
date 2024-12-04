@@ -1,7 +1,7 @@
 package com.psyluckco.firebase
 
 import com.psyluckco.sqwads.core.model.Response
-import com.psyluckco.sqwads.core.model.Room
+import com.psyluckco.sqwads.core.model.firebase.Room
 import kotlinx.coroutines.flow.Flow
 
 typealias GetOpenRoomsResponse = Response<List<Room>>
