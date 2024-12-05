@@ -10,60 +10,49 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.toObjects
 import com.psyluckco.firebase.CreateRoomResponse
-import com.psyluckco.firebase.GetOpenRoomsResponse
+import com.psyluckco.firebase.JoinRoomResponse
+import com.psyluckco.firebase.LeaveRoomResponse
 import com.psyluckco.firebase.RoomService
+import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.firebase.Room
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import kotlin.coroutines.resume
 
 class RoomServiceImpl @Inject constructor(
-    private val db : FirebaseFirestore,
-    private val auth: FirebaseAuth,
+    private val firestore : FirebaseFirestore,
+    private val userRepository: UserRepository,
 ) : RoomService{
 
-    override suspend fun loadAllOpenRooms(): Flow<GetOpenRoomsResponse> = callbackFlow {
+    override suspend fun loadAllOpenRooms(): Flow<List<Room>> = callbackFlow {
 
-        lateinit var registration : ListenerRegistration
+        val openedRoomsQuery = roomsColRef
+            .whereEqualTo("isOpened", true)
 
-        try {
+        openedRoomsQuery.addSnapshotListener { values, error ->
+            if(error != null) {
+                return@addSnapshotListener
+            }
 
-            val query = db.collection("rooms")
-                .whereEqualTo("isOpened", true)
-
-            registration = query.addSnapshotListener { result, e ->
-                    if(e != null) {
-                        trySend(Response.Failure(e))
-                        return@addSnapshotListener
-                    }
-
-                    val rooms = ArrayList<Room>();
-                    for(doc in result!!) {
-                        val openRoom = doc.toObject(Room::class.java)
-
-                        rooms.add(openRoom)
-                    }
-
-                    trySend(Response.Success(rooms))
-                }
-
-        } catch(e: Exception) {
-            trySend(Response.Failure(e))
-            awaitClose { registration.remove() }
+            if(values != null && !values.isEmpty) {
+                trySend(values.toObjects<Room>())
+            } else {
+                trySend(emptyList())
+            }
         }
     }
 
-    override suspend fun createNewRoom(roomName: String): CreateRoomResponse = suspendCancellableCoroutine {
-        continuation ->
+    override suspend fun createNewRoom(roomName: String): CreateRoomResponse = runCatching {
 
-        val userId = auth.currentUser?.uid ?: ""
-
-        val userRef = db.collection("users").document(userId)
+        val userRef = userRepository.getUserRef()
 
         val createdRoom = Room(
             name = roomName,
@@ -73,13 +62,36 @@ class RoomServiceImpl @Inject constructor(
             isOpened = true
         )
 
-        db.collection("rooms")
-            .add(createdRoom)
-            .addOnSuccessListener {
-                continuation.resume(Response.Success(true))
-            }
-            .addOnFailureListener { e ->
-                continuation.resume(Response.Failure(e))
-            }
+        roomsColRef.add(createdRoom).await().id
+    }
+
+    override suspend fun joinRoom(roomId: String): JoinRoomResponse {
+        try {
+            roomsColRef
+                .document(roomId)
+                .update("members", FieldValue.arrayUnion(userRepository.getUserRef()))
+
+            return Response.Success(data = Unit)
+        } catch (e: Exception) {
+            return Response.Failure(e)
+        }
+    }
+
+    override suspend fun leaveRoom(roomId: String): LeaveRoomResponse {
+        try {
+            roomsColRef
+                .document(roomId)
+                .update("members", FieldValue.arrayRemove(userRepository.getUserRef()))
+
+            return Response.Success(data = Unit)
+        } catch(e: Exception) {
+            return Response.Failure(e)
+        }
+    }
+
+    private val roomsColRef by lazy { firestore.collection(ROOMS) }
+
+    companion object {
+        private const val ROOMS = "rooms"
     }
 }

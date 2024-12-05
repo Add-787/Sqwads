@@ -8,5 +8,5 @@ package com.psyluckco.sqwads.core.data.repository
 
 interface AuthenticationRepository {
     suspend fun signInWithEmailAndPassword(email: String, password: String): Result<String>
-    suspend fun signUpWithEmailAndPassword(email: String, password: String, fullName: String): Result<String>
+    suspend fun signUpWithEmailAndPassword(email: String, password: String, displayName: String): Result<String>
 }

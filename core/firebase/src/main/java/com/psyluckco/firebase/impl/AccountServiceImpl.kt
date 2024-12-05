@@ -9,19 +9,21 @@ package com.psyluckco.firebase.impl
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.ReloadUserResponse
 import com.psyluckco.firebase.SendEmailVerificationResponse
 import com.psyluckco.firebase.SendPasswordResetEmailResponse
 import com.psyluckco.firebase.UpdatePasswordResponse
+import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.Response
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor(
     private val auth : FirebaseAuth,
-    private val db : FirebaseFirestore
 ) : AccountService {
 
     override val userId: String?
@@ -41,10 +43,23 @@ class AccountServiceImpl @Inject constructor(
 
     override suspend fun firebaseSignUpWithEmailAndPassword(
         email: String,
-        password: String
+        password: String,
+        displayName: String
     ): AuthResult {
+        val authResult = auth.createUserWithEmailAndPassword(email, password).await()
 
-        return auth.createUserWithEmailAndPassword(email,password).await()
+        if(authResult.user == null) {
+            return authResult
+        }
+
+        // Update display name
+        val profileUpdate = UserProfileChangeRequest.Builder()
+            .setDisplayName(displayName)
+            .build()
+
+        authResult.user!!.updateProfile(profileUpdate).await()
+
+        return authResult
     }
 
     override suspend fun sendEmailVerification(): SendEmailVerificationResponse {

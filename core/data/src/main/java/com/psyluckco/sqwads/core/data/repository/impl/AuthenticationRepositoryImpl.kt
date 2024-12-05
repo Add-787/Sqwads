@@ -8,37 +8,54 @@ package com.psyluckco.sqwads.core.data.repository.impl
 
 import com.google.firebase.auth.userProfileChangeRequest
 import com.psyluckco.firebase.AccountService
+import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
+import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.di.Dispatcher
 import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
+import com.psyluckco.sqwads.core.model.firebase.User
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Dispatchers.IO
 import javax.inject.Inject
 
 class AuthenticationRepositoryImpl @Inject constructor(
     private val accountService : AccountService,
+    private val userRepository: UserRepository,
     @Dispatcher(SqwadsDispatchers.IO) private val ioDispatcher : CoroutineDispatcher
 ) : AuthenticationRepository {
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Result<String> =
         runCatchingWithContext(ioDispatcher) {
             val result = accountService.firebaseSignInWithEmailAndPassword(email, password)
             accountService.reloadFirebaseUser()
+
+            if(result.user == null)
+            {
+                throw FirebaseUserIsNullException()
+            }
+
+            val isPresent = userRepository.isUserInDatabase(email).getOrThrow()
+
+            if(!isPresent) {
+                val firebaseUser = User(
+                    id = result.user!!.uid,
+                    email = result.user!!.email ?: "",
+                    name = result.user!!.displayName ?: ""
+                )
+
+                userRepository.saveUser(firebaseUser)
+            }
+
             return@runCatchingWithContext result.user?.uid.toString()
         }
 
     override suspend fun signUpWithEmailAndPassword(
         email: String,
         password: String,
-        fullName: String
+        displayName: String
     ): Result<String> = runCatchingWithContext(ioDispatcher) {
-        val result = accountService.firebaseSignUpWithEmailAndPassword(email, password)
+        val result = accountService.firebaseSignUpWithEmailAndPassword(email, password, displayName)
         accountService.sendEmailVerification()
-
-        val profileNameUpdate = userProfileChangeRequest {
-            displayName = fullName
-        }
-        result.user?.updateProfile(profileNameUpdate)
 
         return@runCatchingWithContext result.user?.uid.toString()
     }

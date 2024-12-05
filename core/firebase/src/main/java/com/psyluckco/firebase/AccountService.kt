@@ -15,7 +15,7 @@ interface AccountService {
     val isEmailVerified: Boolean
     val email: String?
     val firebaseUser: FirebaseUser?
-    suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String) : AuthResult
+    suspend fun firebaseSignUpWithEmailAndPassword(email: String, password: String, displayName: String) : AuthResult
     suspend fun sendEmailVerification() : SendEmailVerificationResponse
     suspend fun firebaseSignInWithEmailAndPassword(email: String, password: String) : AuthResult
     suspend fun reloadFirebaseUser() : ReloadUserResponse
