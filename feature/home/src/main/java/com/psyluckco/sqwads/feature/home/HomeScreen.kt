@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -38,6 +39,7 @@ import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
@@ -86,12 +88,12 @@ fun HomeScreen(
             navigateToNewRoom = { }
         )
 
-        
+        Spacer(modifier = Modifier.height(9.dp))
+
+        // JoinRoomsSection()
 
     }
 }
-
-
 
 @Composable
 fun HomeHeader(
@@ -201,12 +203,15 @@ private fun CreateNewRoomCard(
 }
 
 @Composable
-fun JoinRoomsSection() {
+fun JoinRoomsSection(
+    rooms: List<Room>,
+    modifier: Modifier = Modifier.padding(20.dp)
+) {
     Column {
 
         Text(
-            text = stringResource(id = AppText.placeholder),
-            style = MaterialTheme.typography.displayMedium
+            text = stringResource(id = AppText.join_rooms_section_header),
+            style = MaterialTheme.typography.displaySmall
         )
 
 

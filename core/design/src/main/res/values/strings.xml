@@ -16,4 +16,5 @@
     <string name="back_to_login_button">Login</string>
     <string name="password_recovery_button">Recover</string>
     <string name="placeholder_section_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</string>
+    <string name="join_rooms_section_header">Join Rooms</string>
 </resources>

@@ -6,16 +6,14 @@
 
 package com.psyluckco.sqwads.core.data.repository.impl
 
-import com.google.firebase.auth.userProfileChangeRequest
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
-import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.di.Dispatcher
 import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
-import com.psyluckco.sqwads.core.model.firebase.User
+import com.psyluckco.sqwads.core.model.firebase.FirebaseUser
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
@@ -37,7 +35,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
             val isPresent = userRepository.isUserInDatabase(email).getOrThrow()
 
             if(!isPresent) {
-                val firebaseUser = User(
+                val firebaseUser = FirebaseUser(
                     id = result.user!!.uid,
                     email = result.user!!.email ?: "",
                     name = result.user!!.displayName ?: ""

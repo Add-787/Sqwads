@@ -6,10 +6,8 @@
 
 package com.psyluckco.firebase.impl
 
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.toObjects
 import com.psyluckco.firebase.CreateRoomResponse
 import com.psyluckco.firebase.JoinRoomResponse
@@ -17,22 +15,18 @@ import com.psyluckco.firebase.LeaveRoomResponse
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Response
-import com.psyluckco.sqwads.core.model.firebase.Room
-import kotlinx.coroutines.channels.awaitClose
+import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
-import kotlin.coroutines.resume
 
 class RoomServiceImpl @Inject constructor(
     private val firestore : FirebaseFirestore,
     private val userRepository: UserRepository,
 ) : RoomService{
 
-    override suspend fun loadAllOpenRooms(): Flow<List<Room>> = callbackFlow {
+    override suspend fun loadAllOpenRooms(): Flow<List<FirebaseRoom>> = callbackFlow {
 
         val openedRoomsQuery = roomsColRef
             .whereEqualTo("isOpened", true)
@@ -43,7 +37,7 @@ class RoomServiceImpl @Inject constructor(
             }
 
             if(values != null && !values.isEmpty) {
-                trySend(values.toObjects<Room>())
+                trySend(values.toObjects<FirebaseRoom>())
             } else {
                 trySend(emptyList())
             }
@@ -54,7 +48,7 @@ class RoomServiceImpl @Inject constructor(
 
         val userRef = userRepository.getUserRef()
 
-        val createdRoom = Room(
+        val createdRoom = FirebaseRoom(
             name = roomName,
             createdBy = userRef,
             createdAt = FieldValue.serverTimestamp(),

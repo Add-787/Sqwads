@@ -9,12 +9,10 @@ package com.psyluckco.firebase.impl
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
-import com.google.firebase.firestore.toObject
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.UserRepository
-import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
-import com.psyluckco.sqwads.core.model.firebase.User
+import com.psyluckco.sqwads.core.model.firebase.FirebaseUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -23,7 +21,7 @@ class UserDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val accountService: AccountService
 ) : UserRepository {
-    override suspend fun saveUser(user: User) {
+    override suspend fun saveUser(user: FirebaseUser) {
         userColRef.document(user.id).set(user).await()
     }
 
@@ -32,9 +30,9 @@ class UserDataSource @Inject constructor(
         querySnapshot.size() > 0
     }
 
-    override suspend fun getUser(): User = accountService.userId?.let {
+    override suspend fun getUser(): FirebaseUser = accountService.userId?.let {
             userId ->
-            getUserDocRef(userId).get().await().toObject(User::class.java)
+            getUserDocRef(userId).get().await().toObject(FirebaseUser::class.java)
         } ?: throw FirebaseUserIsNullException()
 
     override suspend fun getUserRef(): DocumentReference {
@@ -43,9 +41,9 @@ class UserDataSource @Inject constructor(
         } ?: throw FirebaseUserIsNullException()
     }
 
-    override fun getUserFlow(): Flow<User?> {
+    override fun getUserFlow(): Flow<FirebaseUser?> {
         return accountService.userId?.let {
-            userId -> getUserDocRef(userId).dataObjects<User>()
+            userId -> getUserDocRef(userId).dataObjects<FirebaseUser>()
         } ?: throw FirebaseUserIsNullException()
     }
 
