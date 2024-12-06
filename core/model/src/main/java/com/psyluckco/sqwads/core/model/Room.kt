@@ -1,9 +1,10 @@
 package com.psyluckco.sqwads.core.model
 
+import com.google.firebase.firestore.DocumentId
 import java.time.LocalDateTime
 
 data class Room(
-    val id: String,
+    @DocumentId val id: String,
     val name: String,
     val members: List<String>,
     val createdAt: LocalDateTime

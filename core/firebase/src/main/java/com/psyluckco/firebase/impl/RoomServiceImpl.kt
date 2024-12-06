@@ -8,6 +8,7 @@ package com.psyluckco.firebase.impl
 
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.psyluckco.firebase.CreateRoomResponse
 import com.psyluckco.firebase.JoinRoomResponse
@@ -44,19 +45,48 @@ class RoomServiceImpl @Inject constructor(
         }
     }
 
+    override suspend fun loadRoomData(roomId: String): Flow<FirebaseRoom?> = callbackFlow {
+        
+        val joinedRoomRef = roomsColRef.document(roomId)
+        
+        joinedRoomRef.addSnapshotListener { value, error ->
+            if(error != null) {
+                return@addSnapshotListener
+            }
+
+            if(value != null && value.exists()) {
+                trySend(value.toObject<FirebaseRoom>())
+            } else {
+                trySend(null)
+            }
+        }
+            
+        
+        
+
+    }
+
     override suspend fun createNewRoom(roomName: String): CreateRoomResponse = runCatching {
 
-        val userRef = userRepository.getUserRef()
+        val user = userRepository.getUser()
 
-        val createdRoom = FirebaseRoom(
-            name = roomName,
-            createdBy = userRef,
-            createdAt = FieldValue.serverTimestamp(),
-            members = listOf(userRef),
-            isOpened = true
+        val roomData = mapOf(
+            "name" to roomName,
+            "createdBy" to user,
+            "createdAt" to FieldValue.serverTimestamp(),
+            "members" to listOf(user),
+            "isOpened" to true
         )
 
-        roomsColRef.add(createdRoom).await().id
+//        val createdRoom = FirebaseRoom(
+//            name = roomName,
+//            createdBy = user,
+//            createdAt = FieldValue.serverTimestamp(),
+//            members = listOf(user),
+//            isOpened = true
+//        )
+
+        roomsColRef.add(roomData).await().id
     }
 
     override suspend fun joinRoom(roomId: String): JoinRoomResponse {

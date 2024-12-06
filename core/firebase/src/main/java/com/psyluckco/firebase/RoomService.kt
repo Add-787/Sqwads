@@ -12,6 +12,7 @@ typealias LeaveRoomResponse = Response<Unit>
 interface RoomService {
 
     suspend fun loadAllOpenRooms() : Flow<List<FirebaseRoom>>
+    suspend fun loadRoomData(roomId: String) : Flow<FirebaseRoom?>
     suspend fun createNewRoom(roomName: String) : CreateRoomResponse
     suspend fun joinRoom(roomId: String) : JoinRoomResponse
     suspend fun leaveRoom(roomId: String) : LeaveRoomResponse
