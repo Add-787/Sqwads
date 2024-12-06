@@ -6,6 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -14,9 +15,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -40,6 +46,7 @@ import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.Room
+import java.time.LocalDateTime
 import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
@@ -90,7 +97,9 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(9.dp))
 
-        // JoinRoomsSection()
+        JoinRoomsSection(
+            rooms = uiState.rooms
+        )
 
     }
 }
@@ -142,9 +151,35 @@ fun HomeHeader(
 @Composable
 @Preview(showBackground = true)
 fun HomeScreenPreview() {
+
+    val fakeRooms = listOf(
+        Room(
+            id = "1",
+            name = "test_room_1",
+            members = listOf("user1","user2"),
+            createdAt = LocalDateTime.now()
+        ),
+        Room(
+            id = "2",
+            name = "test_room_2",
+            members = listOf("user3","user4","user5"),
+            createdAt = LocalDateTime.now()
+        ),
+        Room(
+            id = "3",
+            name = "test_room_3",
+            members = listOf("user6","user7"),
+            createdAt = LocalDateTime.now()
+        )
+    )
+
     SqwadsTheme {
         HomeScreen(
-            uiState = HomeUiState(displayName = "Mark", isLoading = LoadingState.Idle),
+            uiState = HomeUiState(
+                displayName = "Mark",
+                isLoading = LoadingState.Idle,
+                rooms = fakeRooms
+            ),
             onEvent = {}
         )
     }
@@ -153,9 +188,35 @@ fun HomeScreenPreview() {
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeScreenDarkPreview() {
+
+    val fakeRooms = listOf(
+        Room(
+            id = "1",
+            name = "test_room_1",
+            members = listOf("user1","user2"),
+            createdAt = LocalDateTime.now()
+        ),
+        Room(
+            id = "2",
+            name = "test_room_2",
+            members = listOf("user3","user4","user5"),
+            createdAt = LocalDateTime.now()
+        ),
+        Room(
+            id = "3",
+            name = "test_room_3",
+            members = listOf("user6","user7"),
+            createdAt = LocalDateTime.now()
+        )
+    )
+
     SqwadsTheme {
         HomeScreen(
-            uiState = HomeUiState(displayName = "Mark", isLoading = LoadingState.Idle),
+            uiState = HomeUiState(
+                displayName = "Mark",
+                isLoading = LoadingState.Idle,
+                rooms = fakeRooms
+            ),
             onEvent = { }
         )
     }
@@ -205,15 +266,81 @@ private fun CreateNewRoomCard(
 @Composable
 fun JoinRoomsSection(
     rooms: List<Room>,
-    modifier: Modifier = Modifier.padding(20.dp)
+    modifier: Modifier = Modifier
 ) {
     Column {
 
         Text(
             text = stringResource(id = AppText.join_rooms_section_header),
-            style = MaterialTheme.typography.displaySmall
+            style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.onBackground
         )
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(rooms) {
+                room -> RoomCard(
+                    room = room,
+                    navigateToRoom = { }
+                )
+
+            }
+            
+        }
+
+    }
+}
+
+@Composable
+fun RoomCard(
+    room: Room,
+    modifier: Modifier = Modifier,
+    navigateToRoom: (String) -> Unit
+) {
+
+    Card(
+        modifier = Modifier
+            .size(90.dp)
+            .padding(all = 4.dp)
+            .clickable { navigateToRoom(room.name) },
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 7.dp
+        )
+    ) {
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(5.dp),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(text = room.name)
+                Text(
+                    text = room.createdAt.dayOfWeek.toString(),
+                    style = MaterialTheme.typography.labelSmall
+                )
+
+            }
+            Icon(
+                imageVector = Icons.Default.Home,
+                contentDescription = null,
+                modifier = Modifier.size(55.dp)
+            )
+
+        }
 
 
     }
+
+
 }
