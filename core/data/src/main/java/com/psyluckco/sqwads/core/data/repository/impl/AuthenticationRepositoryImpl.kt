@@ -44,7 +44,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
                 userRepository.saveUser(firebaseUser)
             }
 
-            return@runCatchingWithContext result.user?.uid.toString()
+            result.user?.uid.toString()
         }
 
     override suspend fun signUpWithEmailAndPassword(

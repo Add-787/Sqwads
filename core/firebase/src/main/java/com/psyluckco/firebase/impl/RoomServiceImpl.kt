@@ -90,14 +90,14 @@ class RoomServiceImpl @Inject constructor(
     }
 
     override suspend fun joinRoom(roomId: String): JoinRoomResponse {
-        try {
+        return try {
             roomsColRef
                 .document(roomId)
                 .update("members", FieldValue.arrayUnion(userRepository.getUserRef()))
 
-            return Response.Success(data = Unit)
+            Response.Success(data = Unit)
         } catch (e: Exception) {
-            return Response.Failure(e)
+            Response.Failure(e)
         }
     }
 
