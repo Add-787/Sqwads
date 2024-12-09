@@ -28,7 +28,7 @@ class RoomRepositoryImpl @Inject constructor(
                     return@collect
                 }
 
-                emit(it!!.toRoom())
+                emit(it.toRoom())
             }
         }
     }

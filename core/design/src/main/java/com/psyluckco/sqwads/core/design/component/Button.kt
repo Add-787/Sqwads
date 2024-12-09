@@ -79,6 +79,10 @@ fun DefaultTextButton(
     modifier: Modifier = Modifier,
     leadingIcon: ImageVector? = null,
     @StringRes text: Int,
+    colors: ButtonColors = ButtonDefaults.outlinedButtonColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        contentColor = MaterialTheme.colorScheme.onPrimary
+    ),
     onClick: () -> Unit,
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -91,11 +95,7 @@ fun DefaultTextButton(
         shape = RoundedCornerShape(size = 16.dp),
         modifier = modifier.defaultMinSize(minWidth = 140.dp, minHeight = 65.dp),
         border = ButtonDefaults.outlinedButtonBorder.copy(width = 0.dp),
-        colors = ButtonDefaults.outlinedButtonColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer,
-            contentColor = MaterialTheme.colorScheme.onPrimary
-
-        ),
+        colors = colors,
         contentPadding = PaddingValues(horizontal = 8.dp),
 
     ) {

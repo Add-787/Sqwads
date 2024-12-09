@@ -18,8 +18,8 @@ data class FirebaseRoom(
     val isOpened: Boolean
 ) {
 
-    fun toRoom() {
-        Room(
+    fun toRoom() : Room {
+        return Room(
             id = id,
             name = name,
             members = members.map { dr -> dr.name },
