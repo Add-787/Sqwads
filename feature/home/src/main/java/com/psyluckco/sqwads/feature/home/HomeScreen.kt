@@ -6,7 +6,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -15,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -51,7 +49,8 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun HomeRoute(
-    navigateToSquad: (String) -> Unit,
+    userName: String,
+    navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
@@ -66,7 +65,7 @@ internal fun HomeRoute(
      * recompositions, thus optimizing UI responsiveness and performance.
      */
     val onEvent by rememberUpdatedState(
-        newValue = { event: HomeUiEvent ->
+        newValue = { event: HomeEvent ->
             viewModel.onEvent(event)
         }
     )
@@ -82,13 +81,13 @@ internal fun HomeRoute(
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
-    onEvent: (HomeUiEvent) -> Unit,
+    onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
-            displayName = uiState.displayName
+            displayName = uiState.userName
         )
 
         CreateNewRoomCard(
@@ -176,7 +175,7 @@ fun HomeScreenPreview() {
     SqwadsTheme {
         HomeScreen(
             uiState = HomeUiState(
-                displayName = "Mark",
+                userName = "Mark",
                 isLoading = LoadingState.Idle,
                 rooms = fakeRooms
             ),
@@ -213,7 +212,7 @@ private fun HomeScreenDarkPreview() {
     SqwadsTheme {
         HomeScreen(
             uiState = HomeUiState(
-                displayName = "Mark",
+                userName = "Mark",
                 isLoading = LoadingState.Idle,
                 rooms = fakeRooms
             ),

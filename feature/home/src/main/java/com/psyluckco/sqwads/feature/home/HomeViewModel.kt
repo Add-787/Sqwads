@@ -9,28 +9,30 @@ package com.psyluckco.sqwads.feature.home
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
+import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val accountService: AccountService,
+    private val roomRepository: RoomRepository,
     logService: LogService
 ) : BaseViewModel(logService) {
 
-    private val _uiState = MutableStateFlow(HomeUiState(displayName = if(accountService.displayName.isNullOrEmpty()) "Guest" else accountService.displayName!!))
+    private val _uiState = MutableStateFlow(HomeUiState(userName = if(accountService.displayName.isNullOrEmpty()) "Guest" else accountService.displayName!!))
     val uiState = _uiState.asStateFlow()
 
     private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
     val navigationState = _navigationState.asStateFlow()
 
-    fun onEvent(event: HomeUiEvent) {
+    fun onEvent(event: HomeEvent) {
         when(event) {
-            HomeUiEvent.OnProfileClicked -> TODO()
-            is HomeUiEvent.OnSquadClicked -> TODO()
+            HomeEvent.OnProfileClicked -> { }
+            is HomeEvent.OnRoomClicked -> { }
+            HomeEvent.OnNewRoomCreated -> TODO()
         }
     }
 }

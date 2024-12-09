@@ -6,10 +6,13 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
 import androidx.navigation.navOptions
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Home
+data class Home(
+    val userName: String
+)
 
 fun NavController.navigateToHome(navOptions: NavOptions? = navOptions {
     popUpTo(0) { inclusive = true }
@@ -19,12 +22,17 @@ fun NavController.navigateToHome(navOptions: NavOptions? = navOptions {
 }
 
 fun NavGraphBuilder.homeScreen(
-    navigateToSquad: (String) -> Unit,
+    navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit
 ) {
     composable<Home> {
+
+        backStackEntry ->
+            val home: Home = backStackEntry.toRoute()
+
         HomeRoute(
-            navigateToSquad = navigateToSquad,
+            userName = home.userName,
+            navigateToRoom = navigateToRoom,
             navigateToProfile = navigateToProfile
         )
     }

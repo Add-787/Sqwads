@@ -9,7 +9,6 @@ package com.psyluckco.sqwads.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.psyluckco.forgot_password.forgotPasswordScreen
 import com.psyluckco.forgot_password.navigateToForgotPassword
 import com.psyluckco.register.navigateToRegister
@@ -18,6 +17,7 @@ import com.psyluckco.sqwads.SqwadsAppState
 import com.psyluckco.sqwads.feature.home.homeScreen
 import com.psyluckco.sqwads.feature.home.navigateToHome
 import com.psyluckco.sqwads.feature.joined_room.joinedRoomScreen
+import com.psyluckco.sqwads.feature.joined_room.navigateToJoinedRoom
 import com.psyluckco.sqwads.feature.login.Login
 import com.psyluckco.sqwads.feature.login.loginScreen
 import com.psyluckco.sqwads.feature.login.navigateToLogin
@@ -45,7 +45,7 @@ fun SqwadsNavHost(
 
         homeScreen(
             navigateToProfile = { },
-            navigateToSquad = { }
+            navigateToRoom = navHostController::navigateToJoinedRoom
         )
 
         joinedRoomScreen(

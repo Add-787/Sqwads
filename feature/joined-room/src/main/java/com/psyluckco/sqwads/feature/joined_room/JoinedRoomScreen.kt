@@ -36,6 +36,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -64,6 +65,12 @@ internal fun JoinedRoomRoute(
 ) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+
+    LaunchedEffect(key1 = id) {
+
+
+    }
 
     /**
      * Uses [rememberUpdatedState] for `onEvent` to prevent unnecessary recompositions by maintaining

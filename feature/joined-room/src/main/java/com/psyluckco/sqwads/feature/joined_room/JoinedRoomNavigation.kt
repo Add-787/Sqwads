@@ -21,7 +21,7 @@ data class JoinedRoom(
 
 fun NavController.navigateToJoinedRoom(
     roomId: String,
-    navOptions: NavOptions
+    navOptions: NavOptions? = null
 ) {
     navigate(JoinedRoom(roomId), navOptions)
 }
