@@ -56,6 +56,7 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun JoinedRoomRoute(
+    id: String,
     popUp: () -> Unit,
     navigateToGame: () -> Unit,
     modifier: Modifier = Modifier,
@@ -83,7 +84,7 @@ internal fun JoinedRoomRoute(
     JoinedRoomScreen(
         uiState = uiState,
         popUp = popUp,
-        onEvent = viewModel::onEvent
+        onEvent = onEvent
     )
 
 

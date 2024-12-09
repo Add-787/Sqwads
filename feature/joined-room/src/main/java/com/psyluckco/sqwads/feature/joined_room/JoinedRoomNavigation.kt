@@ -11,13 +11,19 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object JoinedRoom
+data class JoinedRoom(
+    val roomId : String
+)
 
-fun NavController.navigateToJoinedRoom(navOptions: NavOptions) {
-    navigate(JoinedRoom, navOptions)
+fun NavController.navigateToJoinedRoom(
+    roomId: String,
+    navOptions: NavOptions
+) {
+    navigate(JoinedRoom(roomId), navOptions)
 }
 
 fun NavGraphBuilder.joinedRoomScreen(
@@ -26,7 +32,15 @@ fun NavGraphBuilder.joinedRoomScreen(
 ) {
 
     composable<JoinedRoom> {
-        JoinedRoomRoute(popUp = popup, navigateToGame = navigateToGame)
+        backStackEntry ->
+
+        val joinedRoom : JoinedRoom = backStackEntry.toRoute()
+
+        JoinedRoomRoute(
+            id = joinedRoom.roomId,
+            popUp = popup,
+            navigateToGame = navigateToGame
+        )
     }
 
 }

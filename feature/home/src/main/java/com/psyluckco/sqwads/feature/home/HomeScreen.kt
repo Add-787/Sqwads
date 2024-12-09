@@ -75,7 +75,7 @@ internal fun HomeRoute(
         SqwadsProgressLoadingDialog(id = com.psyluckco.sqwads.core.design.R.string.placeholder)
     }
 
-    HomeScreen(uiState = uiState, onEvent = viewModel::onEvent)
+    HomeScreen(uiState = uiState, onEvent = onEvent)
 
 }
 

@@ -17,6 +17,7 @@ import com.psyluckco.register.registerScreen
 import com.psyluckco.sqwads.SqwadsAppState
 import com.psyluckco.sqwads.feature.home.homeScreen
 import com.psyluckco.sqwads.feature.home.navigateToHome
+import com.psyluckco.sqwads.feature.joined_room.joinedRoomScreen
 import com.psyluckco.sqwads.feature.login.Login
 import com.psyluckco.sqwads.feature.login.loginScreen
 import com.psyluckco.sqwads.feature.login.navigateToLogin
@@ -45,6 +46,11 @@ fun SqwadsNavHost(
         homeScreen(
             navigateToProfile = { },
             navigateToSquad = { }
+        )
+
+        joinedRoomScreen(
+            popup = navHostController::popBackStack,
+            navigateToGame = { }
         )
 
         registerScreen(
