@@ -74,12 +74,17 @@ internal fun HomeRoute(
         SqwadsProgressLoadingDialog(id = com.psyluckco.sqwads.core.design.R.string.placeholder)
     }
 
-    HomeScreen(uiState = uiState, onEvent = onEvent)
+    HomeScreen(
+        userName = userName,
+        uiState = uiState,
+        onEvent = onEvent
+    )
 
 }
 
 @Composable
 fun HomeScreen(
+    userName: String,
     uiState: HomeUiState,
     onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -87,7 +92,7 @@ fun HomeScreen(
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
-            displayName = uiState.userName
+            displayName = userName
         )
 
         CreateNewRoomCard(
@@ -174,8 +179,8 @@ fun HomeScreenPreview() {
 
     SqwadsTheme {
         HomeScreen(
+            userName = "Mark",
             uiState = HomeUiState(
-                userName = "Mark",
                 isLoading = LoadingState.Idle,
                 rooms = fakeRooms
             ),
@@ -211,8 +216,8 @@ private fun HomeScreenDarkPreview() {
 
     SqwadsTheme {
         HomeScreen(
+            userName = "Mark",
             uiState = HomeUiState(
-                userName = "Mark",
                 isLoading = LoadingState.Idle,
                 rooms = fakeRooms
             ),

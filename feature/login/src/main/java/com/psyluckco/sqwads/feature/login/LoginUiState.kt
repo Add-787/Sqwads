@@ -25,7 +25,7 @@ sealed class LoginEvent {
 
 sealed class NavigationState {
     data object None : NavigationState()
-    data class NavigateToHome(val userId: String) : NavigationState()
+    data class NavigateToHome(val userName: String) : NavigationState()
     data object NavigateToRegister : NavigationState()
     data object NavigateToForgotPassword : NavigationState()
 }

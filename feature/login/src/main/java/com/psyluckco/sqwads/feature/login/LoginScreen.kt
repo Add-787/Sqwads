@@ -50,7 +50,7 @@ import com.psyluckco.sqwads.core.design.R.drawable as AppDrawable
 
 @Composable
 internal fun LoginRoute(
-    navigateToHome: () -> Unit,
+    navigateToHome: (String) -> Unit,
     navigateToRegister: () -> Unit,
     navigateToForgotPassword: () -> Unit,
     viewModel: LoginViewModel = hiltViewModel()
@@ -65,7 +65,7 @@ internal fun LoginRoute(
         }
         with(navigationState) {
             when(this) {
-                is NavigationState.NavigateToHome -> performNavigation { navigateToHome() }
+                is NavigationState.NavigateToHome -> performNavigation { navigateToHome(this.userName) }
                 is NavigationState.NavigateToRegister -> performNavigation(navigateToRegister)
                 is NavigationState.NavigateToForgotPassword -> performNavigation(navigateToForgotPassword)
                 is NavigationState.None -> Unit

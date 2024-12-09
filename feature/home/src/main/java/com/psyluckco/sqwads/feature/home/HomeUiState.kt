@@ -4,7 +4,6 @@ import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.Room
 
 data class HomeUiState(
-    val userName : String = "Guest",
     val isLoading : LoadingState = LoadingState.Idle,
     val rooms: List<Room> = emptyList()
 )
@@ -17,6 +16,6 @@ sealed class HomeEvent {
 
 sealed interface NavigationState {
     data object None : NavigationState
-    data class NavigateToRoom(val squadId : String) : NavigationState
+    data class NavigateToRoom(val roomId : String) : NavigationState
     data object NavigateToProfile : NavigationState
 }

@@ -14,11 +14,13 @@ data class Home(
     val userName: String
 )
 
-fun NavController.navigateToHome(navOptions: NavOptions? = navOptions {
+fun NavController.navigateToHome(
+    user: String = "Guest",
+    navOptions: NavOptions? = navOptions {
     popUpTo(0) { inclusive = true }
     launchSingleTop = true
 }) {
-    navigate(Home, navOptions)
+    navigate(Home(user), navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(

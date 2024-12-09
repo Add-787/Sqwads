@@ -6,6 +6,7 @@
 
 package com.psyluckco.sqwads.feature.login
 
+import com.google.android.play.integrity.internal.i
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
@@ -68,13 +69,13 @@ class LoginViewModel @Inject constructor(
 
         onEvent(LoginEvent.OnLoadingStateChanged(LoadingState.Loading))
 
-        authenticationRepository.signInWithEmailAndPassword(email,password)
-            .onSuccess {
+        authenticationRepository.signInWithEmailAndPassword(email, password)
+            .onSuccess { userName ->
                 onEvent(LoginEvent.OnLoadingStateChanged(LoadingState.Idle))
                 delay(500)
-                _navigationState.update { NavigationState.NavigateToHome("ywehbvh") }
+                _navigationState.update { NavigationState.NavigateToHome(userName) }
             }.onFailure {
-                if(it is Exceptions.EmailVerificationNotDoneException) {
+                if (it is Exceptions.EmailVerificationNotDoneException) {
                     SnackbarManager.showMessage(Apptext.placeholder)
                 } else {
                     it.message?.let { message -> SnackbarManager.showMessage(message) }
