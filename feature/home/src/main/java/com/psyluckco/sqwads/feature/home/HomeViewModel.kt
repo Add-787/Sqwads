@@ -22,7 +22,7 @@ class HomeViewModel @Inject constructor(
     logService: LogService
 ) : BaseViewModel(logService) {
 
-    private val _uiState = MutableStateFlow(HomeUiState(userName = if(accountService.displayName.isNullOrEmpty()) "Guest" else accountService.displayName!!))
+    private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
     private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
