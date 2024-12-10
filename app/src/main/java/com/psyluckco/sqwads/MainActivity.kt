@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         viewModel.initialize()
 
-        var isEmailVerified by  mutableStateOf(AccountState.Loading)
+        var isEmailVerified by  mutableStateOf<AccountState>(AccountState.Loading)
 
         scopeWithLifecycle {
             viewModel.accountState.filter { it != AccountState.Loading }.first().let {

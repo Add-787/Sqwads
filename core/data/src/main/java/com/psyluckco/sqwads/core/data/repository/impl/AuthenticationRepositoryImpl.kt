@@ -32,18 +32,6 @@ class AuthenticationRepositoryImpl @Inject constructor(
                 throw FirebaseUserIsNullException()
             }
 
-            val isPresent = userRepository.isUserInDatabase(email).getOrThrow()
-
-            if(!isPresent) {
-                val firebaseUser = FirebaseUser(
-                    id = result.user!!.uid,
-                    email = result.user!!.email ?: "",
-                    name = result.user!!.displayName ?: ""
-                )
-
-                userRepository.saveUser(firebaseUser)
-            }
-
             result.user?.uid.toString()
         }
 

@@ -49,7 +49,6 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun HomeRoute(
-    userName: String,
     navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
@@ -75,7 +74,6 @@ internal fun HomeRoute(
     }
 
     HomeScreen(
-        userName = userName,
         uiState = uiState,
         onEvent = onEvent
     )
@@ -84,7 +82,6 @@ internal fun HomeRoute(
 
 @Composable
 fun HomeScreen(
-    userName: String,
     uiState: HomeUiState,
     onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
@@ -92,7 +89,6 @@ fun HomeScreen(
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
-            displayName = userName
         )
 
         CreateNewRoomCard(
@@ -179,7 +175,6 @@ fun HomeScreenPreview() {
 
     SqwadsTheme {
         HomeScreen(
-            userName = "Mark",
             uiState = HomeUiState(
                 loadingState = LoadingState.Idle,
                 rooms = fakeRooms
@@ -216,7 +211,6 @@ private fun HomeScreenDarkPreview() {
 
     SqwadsTheme {
         HomeScreen(
-            userName = "Mark",
             uiState = HomeUiState(
                 loadingState = LoadingState.Idle,
                 rooms = fakeRooms

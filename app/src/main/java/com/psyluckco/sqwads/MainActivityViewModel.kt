@@ -18,10 +18,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-enum class AccountState {
-    Loading,
-    UserAlreadySignIn,
-    UserNotSignIn
+sealed class AccountState {
+    data object Loading : AccountState()
+    data class UserAlreadySignIn(val userName: String) : AccountState()
+    data object UserNotSignIn : AccountState()
 }
 
 @HiltViewModel
@@ -29,7 +29,7 @@ class MainActivityViewModel @Inject constructor(
     private val accountService: AccountService
 ) : ViewModel() {
 
-    private val _accountState = MutableStateFlow(AccountState.Loading)
+    private val _accountState = MutableStateFlow<AccountState>(AccountState.Loading)
     val accountState = _accountState.asStateFlow()
 
     private var initializeCalled = false
@@ -42,7 +42,7 @@ class MainActivityViewModel @Inject constructor(
             runCatching {
                 if(accountService.isEmailVerified) {
                     accountService.firebaseUser?.getIdToken(true)?.await()?.token?.let {
-                        _accountState.update { AccountState.UserAlreadySignIn }
+                        _accountState.update { AccountState.UserAlreadySignIn(accountService.displayName ?: "Guest") }
                     }
                 } else {
                     _accountState.update { AccountState.UserNotSignIn }

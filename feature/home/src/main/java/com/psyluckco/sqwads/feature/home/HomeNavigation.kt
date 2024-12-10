@@ -10,9 +10,7 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Home(
-    val userName: String
-)
+data object Home
 
 fun NavController.navigateToHome(
     user: String = "Guest",
@@ -20,7 +18,7 @@ fun NavController.navigateToHome(
     popUpTo(0) { inclusive = true }
     launchSingleTop = true
 }) {
-    navigate(Home(user), navOptions)
+    navigate(Home, navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(
@@ -29,11 +27,7 @@ fun NavGraphBuilder.homeScreen(
 ) {
     composable<Home> {
 
-        backStackEntry ->
-            val home: Home = backStackEntry.toRoute()
-
         HomeRoute(
-            userName = home.userName,
             navigateToRoom = navigateToRoom,
             navigateToProfile = navigateToProfile
         )
