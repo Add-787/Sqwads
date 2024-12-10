@@ -3,6 +3,9 @@ package com.psyluckco.sqwads.core.data.repository.impl
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
+import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeCreatedException
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.di.Dispatcher
@@ -24,13 +27,17 @@ class RoomRepositoryImpl @Inject constructor(
     override suspend fun getRoom(roomId: String): Result<Flow<Room>> = runCatching {
         flow {
             roomService.loadRoomData(roomId).collect {
-                it -> if(it == null) {
+                if(it == null) {
                     return@collect
                 }
 
                 emit(it.toRoom())
             }
         }
+    }
+
+    override suspend fun createNewRoom(roomName: String): Result<String> = runCatching {
+        roomService.createNewRoom(roomName).getOrNull() ?: throw FirebaseRoomCouldNotBeCreatedException()
     }
 
 }

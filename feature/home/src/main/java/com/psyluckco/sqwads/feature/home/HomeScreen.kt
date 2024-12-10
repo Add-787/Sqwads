@@ -70,7 +70,7 @@ internal fun HomeRoute(
         }
     )
 
-    if(uiState.isLoading is LoadingState.Loading) {
+    if(uiState.loadingState is LoadingState.Loading) {
         SqwadsProgressLoadingDialog(id = com.psyluckco.sqwads.core.design.R.string.placeholder)
     }
 
@@ -181,7 +181,7 @@ fun HomeScreenPreview() {
         HomeScreen(
             userName = "Mark",
             uiState = HomeUiState(
-                isLoading = LoadingState.Idle,
+                loadingState = LoadingState.Idle,
                 rooms = fakeRooms
             ),
             onEvent = {}
@@ -218,7 +218,7 @@ private fun HomeScreenDarkPreview() {
         HomeScreen(
             userName = "Mark",
             uiState = HomeUiState(
-                isLoading = LoadingState.Idle,
+                loadingState = LoadingState.Idle,
                 rooms = fakeRooms
             ),
             onEvent = { }

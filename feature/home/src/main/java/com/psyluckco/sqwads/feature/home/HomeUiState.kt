@@ -4,14 +4,15 @@ import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.Room
 
 data class HomeUiState(
-    val isLoading : LoadingState = LoadingState.Idle,
+    val loadingState : LoadingState = LoadingState.Idle,
     val rooms: List<Room> = emptyList()
 )
 
 sealed class HomeEvent {
     data object OnProfileClicked : HomeEvent()
     data class OnRoomClicked(val roomId : String) : HomeEvent()
-    data object OnNewRoomCreated : HomeEvent()
+    data class OnLoadingStateChanged(val state: LoadingState) : HomeEvent()
+    data class OnNewRoomClicked(val roomName: String) : HomeEvent()
 }
 
 sealed interface NavigationState {
