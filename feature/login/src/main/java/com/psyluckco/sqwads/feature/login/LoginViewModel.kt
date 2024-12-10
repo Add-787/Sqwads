@@ -12,6 +12,7 @@ import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
 import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.EmailVerificationNotDoneException
 import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.ext.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -75,7 +76,7 @@ class LoginViewModel @Inject constructor(
                 delay(500)
                 _navigationState.update { NavigationState.NavigateToHome(userName) }
             }.onFailure {
-                if (it is Exceptions.EmailVerificationNotDoneException) {
+                if (it is EmailVerificationNotDoneException) {
                     SnackbarManager.showMessage(Apptext.placeholder)
                 } else {
                     it.message?.let { message -> SnackbarManager.showMessage(message) }

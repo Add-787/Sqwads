@@ -7,7 +7,9 @@
 package com.psyluckco.sqwads.core.data.di
 
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
+import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.data.repository.impl.AuthenticationRepositoryImpl
+import com.psyluckco.sqwads.core.data.repository.impl.RoomRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,5 +21,8 @@ interface DataModule {
 
     @Binds
     fun provideAuthenticationRepo(impl: AuthenticationRepositoryImpl): AuthenticationRepository
+
+    @Binds
+    fun provideRoomRepo(impl: RoomRepositoryImpl): RoomRepository
 
 }
