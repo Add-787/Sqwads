@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class RoomRepositoryImpl @Inject constructor(
@@ -38,6 +39,12 @@ class RoomRepositoryImpl @Inject constructor(
 
     override suspend fun createNewRoom(roomName: String): Result<String> = runCatching {
         roomService.createNewRoom(roomName).getOrNull() ?: throw FirebaseRoomCouldNotBeCreatedException()
+    }
+
+    override suspend fun getAllOpenRooms(): Flow<List<Room>>  {
+        return roomService.loadAllOpenRooms().map {
+            rooms -> rooms.map { r -> r.toRoom() }
+        }
     }
 
 }

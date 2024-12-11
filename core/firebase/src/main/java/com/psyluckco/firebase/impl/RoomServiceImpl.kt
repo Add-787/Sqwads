@@ -6,6 +6,7 @@
 
 package com.psyluckco.firebase.impl
 
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.toObject
@@ -17,6 +18,7 @@ import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
@@ -38,11 +40,14 @@ class RoomServiceImpl @Inject constructor(
             }
 
             if(values != null && !values.isEmpty) {
-                trySend(values.toObjects<FirebaseRoom>())
+                val rooms = values.toObjects(FirebaseRoom::class.java)
+                trySend(rooms)
             } else {
                 trySend(emptyList())
             }
         }
+
+        awaitClose()
     }
 
     override suspend fun loadRoomData(roomId: String): Flow<FirebaseRoom?> = callbackFlow {

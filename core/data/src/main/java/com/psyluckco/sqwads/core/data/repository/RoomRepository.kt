@@ -8,5 +8,6 @@ interface RoomRepository {
 
     suspend fun getRoom(roomId: String) : Result<Flow<Room>>
     suspend fun createNewRoom(roomName: String) : Result<String>
+    suspend fun getAllOpenRooms() : Flow<List<Room>>
 
 }

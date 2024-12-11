@@ -10,20 +10,21 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 data class FirebaseRoom(
-    @DocumentId val id: String,
-    val name: String,
-    val createdBy: FirebaseUser,
-    val createdAt: Timestamp,
-    val members: List<FirebaseUser>,
-    val isOpened: Boolean
+    @DocumentId val id: String = "",
+    val name: String = "",
+    val createdBy: DocumentReference? = null,
+    val createdAt: Timestamp = Timestamp.now(),
+    val members: List<DocumentReference> = emptyList(),
+    val isOpened: Boolean = true
 ) {
 
     fun toRoom() : Room {
+
         return Room(
             id = id,
             name = name,
-            members = members.map { dr -> dr.name },
-            createdAt = createdAt.toDate().toInstant()
+            members = members.map { ref -> ref.id },
+            createdAt = createdAt!!.toDate().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime()
         )

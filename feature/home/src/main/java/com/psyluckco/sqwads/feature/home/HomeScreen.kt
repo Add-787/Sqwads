@@ -28,6 +28,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -43,6 +44,7 @@ import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import java.time.LocalDateTime
 import com.psyluckco.sqwads.core.design.R.string as AppText
@@ -54,6 +56,10 @@ internal fun HomeRoute(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.initialize()
+    }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -77,6 +83,8 @@ internal fun HomeRoute(
         uiState = uiState,
         onEvent = onEvent
     )
+
+
 
 }
 

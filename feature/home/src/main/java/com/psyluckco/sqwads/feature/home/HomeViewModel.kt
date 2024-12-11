@@ -6,24 +6,40 @@
 
 package com.psyluckco.sqwads.feature.home
 
-import androidx.compose.material3.Snackbar
+import androidx.annotation.MainThread
+import androidx.lifecycle.viewModelScope
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
+import com.psyluckco.sqwads.core.model.Exceptions.RoomCouldNotBeLoadedException
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Response
+import com.psyluckco.sqwads.core.model.Room
+import com.psyluckco.sqwads.core.model.di.Dispatcher
+import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val accountService: AccountService,
     private val roomRepository: RoomRepository,
+    @Dispatcher(SqwadsDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -32,6 +48,37 @@ class HomeViewModel @Inject constructor(
 
     private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
     val navigationState = _navigationState.asStateFlow()
+
+    private var initializeCalled = false
+
+    @MainThread
+    suspend fun initialize() {
+        if(initializeCalled) {
+            return
+        }
+        initializeCalled = true
+
+        viewModelScope.launch {
+            launch { getAllOpenRooms() }
+        }
+    }
+
+//    val rooms: StateFlow<Response<List<Room>>> =
+//        roomRepository
+//            .getAllOpenRooms()
+//            .map<List<Room>,Response<List<Room>>> {
+//                roomList -> Response.Success(roomList)
+//            }
+//            .catch { exception ->
+//                logService.logNonFatalCrash(exception)
+//                emit(Response.Failure(RoomCouldNotBeLoadedException()))
+//            }
+//            .flowOn(ioDispatcher)
+//            .stateIn(
+//                viewModelScope,
+//                SharingStarted.WhileSubscribed(5000),
+//                Response.Loading
+//            )
 
     fun onEvent(event: HomeEvent) {
         when(event) {
@@ -60,5 +107,12 @@ class HomeViewModel @Inject constructor(
                 it.message?.let { message -> SnackbarManager.showMessage(message) }
                 onEvent(HomeEvent.OnLoadingStateChanged(LoadingState.Idle))
             }
+    }
+
+    private fun getAllOpenRooms() = launchCatching {
+        roomRepository.getAllOpenRooms().collectLatest {
+            rooms -> _uiState.update { it.copy(rooms = rooms) }
+        }
+
     }
 }
