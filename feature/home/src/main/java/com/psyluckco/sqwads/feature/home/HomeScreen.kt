@@ -100,7 +100,9 @@ fun HomeScreen(
         )
 
         CreateNewRoomCard(
-            navigateToNewRoom = { }
+            navigateToNewRoom = {
+                onEvent(HomeEvent.OnNewRoomClicked(roomName = "trsfce"))
+            }
         )
 
         Spacer(modifier = Modifier.height(9.dp))

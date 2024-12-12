@@ -63,22 +63,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-//    val rooms: StateFlow<Response<List<Room>>> =
-//        roomRepository
-//            .getAllOpenRooms()
-//            .map<List<Room>,Response<List<Room>>> {
-//                roomList -> Response.Success(roomList)
-//            }
-//            .catch { exception ->
-//                logService.logNonFatalCrash(exception)
-//                emit(Response.Failure(RoomCouldNotBeLoadedException()))
-//            }
-//            .flowOn(ioDispatcher)
-//            .stateIn(
-//                viewModelScope,
-//                SharingStarted.WhileSubscribed(5000),
-//                Response.Loading
-//            )
 
     fun onEvent(event: HomeEvent) {
         when(event) {
