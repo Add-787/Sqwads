@@ -19,4 +19,6 @@
     <string name="join_rooms_section_header">Join Rooms</string>
     <string name="joined_members_card_header">Joined Members</string>
     <string name="leave_room_button">Leave Room</string>
+    <string name="dismiss_button">Dismiss</string>
+    <string name="confirm_button">Confirm</string>
 </resources>
