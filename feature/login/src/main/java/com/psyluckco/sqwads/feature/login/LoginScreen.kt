@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -86,7 +87,7 @@ fun LoginScreen(
     onEvent: (LoginEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
-
+    val context = LocalContext.current
     if(uiState.loadingState is LoadingState.Loading) SqwadsProgressLoadingDialog(id = AppText.placeholder)
 
     AppWrapper(modifier.background(color = MaterialTheme.colorScheme.background)) {
@@ -140,6 +141,7 @@ fun LoginScreen(
                     buttonSize = 80.dp
                 ) {
 
+                    onEvent(LoginEvent.OnGoogleSignInClicked(context))
 
                 }
                 
