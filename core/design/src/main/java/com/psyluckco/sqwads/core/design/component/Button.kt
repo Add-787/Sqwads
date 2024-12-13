@@ -104,7 +104,7 @@ fun DefaultTextButton(
                 .size(19.dp)
                 .padding(end = 4.dp))
         }
-        Text(style = MaterialTheme.typography.labelLarge, text = stringResource(id = text))
+        Text(style = MaterialTheme.typography.titleMedium, text = stringResource(id = text))
 
     }
 }

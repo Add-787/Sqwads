@@ -66,6 +66,7 @@ fun DefaultTextField(
         trailingIcon = {
 
         },
+        enabled = enabled,
         isError = isError,
         keyboardActions = keyboardActions,
         keyboardOptions = keyboardOptions

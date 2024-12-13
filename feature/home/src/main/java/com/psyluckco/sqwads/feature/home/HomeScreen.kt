@@ -40,11 +40,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.psyluckco.sqwads.core.design.component.AppWrapper
+import com.psyluckco.sqwads.core.design.component.DefaultEditRoomDialog
 import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
-import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import java.time.LocalDateTime
 import com.psyluckco.sqwads.core.design.R.string as AppText
@@ -94,14 +94,15 @@ fun HomeScreen(
     onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
+
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
         )
 
         CreateNewRoomCard(
-            navigateToNewRoom = {
-                onEvent(HomeEvent.OnNewRoomClicked(roomName = "trsfce"))
+            creatingNewRoom = {
+                onEvent(HomeEvent.OnEditRoomNameDialogOpened)
             }
         )
 
@@ -111,6 +112,14 @@ fun HomeScreen(
             rooms = uiState.rooms
         )
 
+    }
+
+    if(uiState.isDialogOpened) {
+        DefaultEditRoomDialog(
+            title = AppText.edit_room_dialog_header,
+            onConfirm = { onEvent(HomeEvent.OnNewRoomCreated(it)) },
+            onDismiss = { onEvent(HomeEvent.OnEditRoomNameDialogClosed) }
+        )
     }
 }
 
@@ -233,13 +242,13 @@ private fun HomeScreenDarkPreview() {
 @Composable
 private fun CreateNewRoomCard(
     modifier: Modifier = Modifier,
-    navigateToNewRoom: () -> Unit,
+    creatingNewRoom: () -> Unit,
 ) {
     Card(
         modifier = Modifier
             .height(150.dp)
             .fillMaxWidth()
-            .clickable { navigateToNewRoom() },
+            .clickable { creatingNewRoom() },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),

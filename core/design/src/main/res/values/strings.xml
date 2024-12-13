@@ -21,4 +21,7 @@
     <string name="leave_room_button">Leave Room</string>
     <string name="dismiss_button">Dismiss</string>
     <string name="confirm_button">Confirm</string>
+    <string name="edit_room_dialog_section_text">Enter the name of your newly created room.</string>
+    <string name="edit_room_field_label_text">Room Name</string>
+    <string name="edit_room_dialog_header">Add Room</string>
 </resources>

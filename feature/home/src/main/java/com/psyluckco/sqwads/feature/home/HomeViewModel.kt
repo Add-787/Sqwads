@@ -8,33 +8,22 @@ package com.psyluckco.sqwads.feature.home
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
-import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
-import com.psyluckco.sqwads.core.model.Exceptions.RoomCouldNotBeLoadedException
 import com.psyluckco.sqwads.core.model.LoadingState
-import com.psyluckco.sqwads.core.model.Response
-import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.di.Dispatcher
 import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.CoroutineContext
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -68,8 +57,10 @@ class HomeViewModel @Inject constructor(
         when(event) {
             HomeEvent.OnProfileClicked -> { }
             is HomeEvent.OnRoomClicked -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
-            is HomeEvent.OnNewRoomClicked -> { onNewRoomCreated(event.roomName) }
+            is HomeEvent.OnNewRoomCreated -> { onNewRoomCreated(event.roomName) }
             is HomeEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
+            HomeEvent.OnEditRoomNameDialogOpened -> _uiState.update { it.copy(isDialogOpened = true) }
+            HomeEvent.OnEditRoomNameDialogClosed -> _uiState.update { it.copy(isDialogOpened = false) }
         }
     }
 
@@ -86,7 +77,7 @@ class HomeViewModel @Inject constructor(
                 id ->
                 onEvent(HomeEvent.OnLoadingStateChanged(LoadingState.Idle))
                 delay(500)
-                _navigationState.update { NavigationState.NavigateToRoom(id) }
+                // _navigationState.update { NavigationState.NavigateToRoom(id) }
             }.onFailure {
                 it.message?.let { message -> SnackbarManager.showMessage(message) }
                 onEvent(HomeEvent.OnLoadingStateChanged(LoadingState.Idle))
