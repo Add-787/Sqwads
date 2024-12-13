@@ -208,6 +208,7 @@ fun GameInfoCard(modifier: Modifier = Modifier) {
                 .padding(9.dp)
         ) {
             Text(
+
                 text = stringResource(id = AppText.placeholder),
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
