@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "932977409718",
+    "firebase_url": "https://sqwads-4699e-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "sqwads-4699e",
     "storage_bucket": "sqwads-4699e.firebasestorage.app"
   },
@@ -12,7 +13,20 @@
           "package_name": "com.psyluckco.sqwads"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "932977409718-gji0fs05bt0etotti7jvj2gdhkritttu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.psyluckco.sqwads",
+            "certificate_hash": "fbe97efc412b054f6792368b3e38beae6f11e873"
+          }
+        },
+        {
+          "client_id": "932977409718-1smktmhecn3m039o1of2vrftash1acoh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDU8zUUZ2f8sEsl460mV92kwgDi4UPdT-E"
@@ -20,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932977409718-1smktmhecn3m039o1of2vrftash1acoh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
