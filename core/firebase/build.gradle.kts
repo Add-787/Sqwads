@@ -8,6 +8,10 @@ plugins {
 
 android {
     namespace = "com.psyluckco.sqwads.core.firebase"
+
+    defaultConfig {
+        multiDexEnabled = true
+    }
 }
 
 dependencies {

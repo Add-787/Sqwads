@@ -16,6 +16,7 @@ import com.psyluckco.firebase.ReloadUserResponse
 import com.psyluckco.firebase.SendEmailVerificationResponse
 import com.psyluckco.firebase.SendPasswordResetEmailResponse
 import com.psyluckco.firebase.UpdatePasswordResponse
+import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.Response
@@ -23,6 +24,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AccountServiceImpl @Inject constructor(
+    private val userRepository: UserRepository,
     private val auth : FirebaseAuth,
 ) : AccountService {
 
@@ -48,16 +50,14 @@ class AccountServiceImpl @Inject constructor(
     ): AuthResult {
         val authResult = auth.createUserWithEmailAndPassword(email, password).await()
 
-        if(authResult.user == null) {
-            return authResult
+        if(authResult.user != null) {
+            userRepository.saveUser(
+                id = authResult.user!!.uid,
+                username = displayName,
+                email = email
+            )
+
         }
-
-        // Update display name
-        val profileUpdate = UserProfileChangeRequest.Builder()
-            .setDisplayName(displayName)
-            .build()
-
-        authResult.user!!.updateProfile(profileUpdate).await()
 
         return authResult
     }

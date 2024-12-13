@@ -39,7 +39,7 @@ fun DefaultDialog(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(400.dp)
             .padding(17.dp)
     ) {
 

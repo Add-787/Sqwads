@@ -6,6 +6,10 @@ plugins {
 android {
     namespace = "com.psyluckco.google"
     compileSdk = 34
+
+    defaultConfig {
+        multiDexEnabled = true
+    }
 }
 
 dependencies {

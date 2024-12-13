@@ -10,15 +10,17 @@ import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object Home
+data class Home(
+    val id: String
+)
 
 fun NavController.navigateToHome(
-    user: String = "Guest",
+    userId: String,
     navOptions: NavOptions? = navOptions {
     popUpTo(0) { inclusive = true }
     launchSingleTop = true
 }) {
-    navigate(Home, navOptions)
+    navigate(Home(userId), navOptions)
 }
 
 fun NavGraphBuilder.homeScreen(

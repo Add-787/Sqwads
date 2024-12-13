@@ -6,6 +6,8 @@
 
 package com.psyluckco.firebase.impl
 
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
@@ -19,10 +21,17 @@ import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
-    private val accountService: AccountService
+    private val auth : FirebaseAuth,
 ) : UserRepository {
-    override suspend fun saveUser(user: FirebaseUser) {
-        userColRef.document(user.id).set(user).await()
+
+    override suspend fun saveUser(id: String, username: String, email: String) {
+
+        val newUser = FirebaseUser(
+            name = username,
+            email = email
+        )
+
+        userColRef.document(id).set(newUser).await()
     }
 
     override suspend fun isUserInDatabase(email: String): Result<Boolean> = runCatching {
@@ -30,19 +39,19 @@ class UserDataSource @Inject constructor(
         querySnapshot.size() > 0
     }
 
-    override suspend fun getUser(): FirebaseUser = accountService.userId?.let {
+    override suspend fun getUser(): FirebaseUser = auth.currentUser?.uid?.let {
             userId ->
             getUserDocRef(userId).get().await().toObject(FirebaseUser::class.java)
         } ?: throw FirebaseUserIsNullException()
 
     override suspend fun getUserRef(): DocumentReference {
-        return accountService.userId?.let {
+        return auth.currentUser?.uid?.let {
             getUserDocRef(it)
         } ?: throw FirebaseUserIsNullException()
     }
 
     override fun getUserFlow(): Flow<FirebaseUser?> {
-        return accountService.userId?.let {
+        return auth.currentUser?.uid?.let {
             userId -> getUserDocRef(userId).dataObjects<FirebaseUser>()
         } ?: throw FirebaseUserIsNullException()
     }

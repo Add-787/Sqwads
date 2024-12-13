@@ -20,7 +20,7 @@ fun NavController.navigateToRegister(navOptions: NavOptions? = null) {
 }
 
 fun NavGraphBuilder.registerScreen(
-    navigateToHome: () -> Unit,
+    navigateToHome: (String) -> Unit,
     navigateToLogin: () -> Unit
 ) {
 

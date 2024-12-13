@@ -20,7 +20,7 @@ import javax.inject.Inject
 
 sealed class AccountState {
     data object Loading : AccountState()
-    data class UserAlreadySignIn(val userName: String) : AccountState()
+    data class UserAlreadySignIn(val userId: String) : AccountState()
     data object UserNotSignIn : AccountState()
 }
 
@@ -42,7 +42,7 @@ class MainActivityViewModel @Inject constructor(
             runCatching {
                 if(accountService.isEmailVerified) {
                     accountService.firebaseUser?.getIdToken(true)?.await()?.token?.let {
-                        _accountState.update { AccountState.UserAlreadySignIn(accountService.displayName ?: "Guest") }
+                        _accountState.update { AccountState.UserAlreadySignIn(accountService.userId ?: "") }
                     }
                 } else {
                     _accountState.update { AccountState.UserNotSignIn }

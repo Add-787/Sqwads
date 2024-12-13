@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    suspend fun saveUser(user: FirebaseUser)
+    suspend fun saveUser(id: String, username: String, email: String)
     suspend fun isUserInDatabase(email: String): Result<Boolean>
     suspend fun getUser(): FirebaseUser
     suspend fun getUserRef() : DocumentReference
