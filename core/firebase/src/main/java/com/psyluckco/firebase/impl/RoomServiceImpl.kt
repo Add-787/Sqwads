@@ -73,7 +73,7 @@ class RoomServiceImpl @Inject constructor(
 
     override suspend fun createNewRoom(roomName: String): CreateRoomResponse = runCatching {
 
-        val user = userRepository.getUser()
+        val user = userRepository.getUserRef()
 
         val roomData = mapOf(
             "name" to roomName,

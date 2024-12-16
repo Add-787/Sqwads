@@ -1,5 +1,6 @@
 package com.psyluckco.sqwads.core.data.repository.impl
 
+
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
@@ -25,25 +26,17 @@ class RoomRepositoryImpl @Inject constructor(
     private val roomService: RoomService,
     @Dispatcher(SqwadsDispatchers.IO) private val ioDispatcher : CoroutineDispatcher
 ) : RoomRepository {
-    override suspend fun getRoom(roomId: String): Result<Flow<Room>> = runCatching {
-        flow {
-            roomService.loadRoomData(roomId).collect {
-                if(it == null) {
-                    return@collect
-                }
-
-                emit(it.toRoom())
-            }
-        }
+    override suspend fun getRoom(roomId: String): Flow<Room> {
+        return roomService.loadRoomData(roomId).filterNotNull().map { it.toRoom() }
     }
 
     override suspend fun createNewRoom(roomName: String): Result<String> = runCatching {
         roomService.createNewRoom(roomName).getOrNull() ?: throw FirebaseRoomCouldNotBeCreatedException()
     }
 
-    override suspend fun getAllOpenRooms(): Flow<List<Room>>  {
+    override suspend fun getAllOpenRooms(): Flow<List<Room>> {
         return roomService.loadAllOpenRooms().map {
-            rooms -> rooms.map { r -> r.toRoom() }
+            firebaseRooms -> firebaseRooms.map { it.toRoom() }
         }
     }
 

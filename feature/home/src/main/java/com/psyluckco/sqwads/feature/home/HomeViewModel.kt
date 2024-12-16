@@ -28,7 +28,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
-    @Dispatcher(SqwadsDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -41,7 +40,8 @@ class HomeViewModel @Inject constructor(
     private var initializeCalled = false
 
     @MainThread
-    suspend fun initialize() {
+    fun initialize() {
+
         if(initializeCalled) {
             return
         }
@@ -56,11 +56,12 @@ class HomeViewModel @Inject constructor(
     fun onEvent(event: HomeEvent) {
         when(event) {
             HomeEvent.OnProfileClicked -> { }
-            is HomeEvent.OnRoomClicked -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
-            is HomeEvent.OnNewRoomCreated -> { onNewRoomCreated(event.roomName) }
+            is HomeEvent.OnRoomCreated -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
+            is HomeEvent.OnRoomNameProvided -> { onNewRoomCreated(event.roomName) }
             is HomeEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
             HomeEvent.OnEditRoomNameDialogOpened -> _uiState.update { it.copy(isDialogOpened = true) }
             HomeEvent.OnEditRoomNameDialogClosed -> _uiState.update { it.copy(isDialogOpened = false) }
+            is HomeEvent.OnRoomJoining -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
         }
     }
 
@@ -76,8 +77,9 @@ class HomeViewModel @Inject constructor(
             .onSuccess {
                 id ->
                 onEvent(HomeEvent.OnLoadingStateChanged(LoadingState.Idle))
+                onEvent(HomeEvent.OnEditRoomNameDialogClosed)
                 delay(500)
-                // _navigationState.update { NavigationState.NavigateToRoom(id) }
+                onEvent(HomeEvent.OnRoomCreated(id))
             }.onFailure {
                 it.message?.let { message -> SnackbarManager.showMessage(message) }
                 onEvent(HomeEvent.OnLoadingStateChanged(LoadingState.Idle))

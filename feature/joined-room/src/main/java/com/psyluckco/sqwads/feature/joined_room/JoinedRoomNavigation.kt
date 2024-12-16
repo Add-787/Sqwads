@@ -33,11 +33,10 @@ fun NavGraphBuilder.joinedRoomScreen(
 
     composable<JoinedRoom> {
         backStackEntry ->
-
-        val joinedRoom : JoinedRoom = backStackEntry.toRoute()
+            val joinedRoom = backStackEntry.toRoute<JoinedRoom>()
 
         JoinedRoomRoute(
-            id = joinedRoom.roomId,
+            roomId = joinedRoom.roomId,
             popUp = popup,
             navigateToGame = navigateToGame
         )
