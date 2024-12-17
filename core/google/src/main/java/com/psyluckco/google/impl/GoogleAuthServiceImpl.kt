@@ -18,6 +18,8 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.psyluckco.google.GoogleAuthService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
@@ -29,6 +31,7 @@ import javax.inject.Inject
 class GoogleAuthServiceImpl @Inject constructor(): GoogleAuthService{
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
     private var clientId = "932977409718-1smktmhecn3m039o1of2vrftash1acoh.apps.googleusercontent.com"
+    private var db = Firebase.firestore
 
     override suspend fun googleSignIn(context: Context) : FirebaseUser? {
         val signInWithGoogleOption: GetSignInWithGoogleOption =
@@ -76,11 +79,31 @@ class GoogleAuthServiceImpl @Inject constructor(): GoogleAuthService{
     private suspend fun firebaseAuthWithGoogle(idToken: String) : FirebaseUser? {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val authResult = auth.signInWithCredential(credential).await()
-            authResult.user
+            val user = auth.signInWithCredential(credential).await().user
+            //add user to firestore
+            if (user != null) {
+                addUserToDb(user)
+            }
+            
+            user
         }catch (e: Exception){
             println(e)
             null
+        }
+    }
+    
+    private suspend fun addUserToDb(user: FirebaseUser){
+        val userData = hashMapOf(
+            "name" to  (user.displayName ?: "Unknown"),
+            "email" to (user.email ?: "No email")
+        )
+        try {
+            db.collection("users")
+                .document(user.uid)
+                .set(userData)
+                .await()
+        }catch (e: Exception){
+            println(e)
         }
     }
 }

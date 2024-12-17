@@ -92,10 +92,9 @@ class LoginViewModel @Inject constructor(
     private fun onGoogleSignInClicked(context: Context) = launchCatching {
         authenticationRepository.signInWithGoogle(context).onSuccess { userName ->
             onEvent(LoginEvent.OnLoadingStateChanged(LoadingState.Idle))
-            delay(500)
             _navigationState.update { NavigationState.NavigateToHome(userName) }
         }.onFailure {
-
+            println("AUth Failed - google sign in")
         }
     }
 }
