@@ -6,6 +6,7 @@
 
 package com.psyluckco.firebase.impl
 
+import com.google.android.play.integrity.internal.m
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,12 +17,17 @@ import com.psyluckco.firebase.JoinRoomResponse
 import com.psyluckco.firebase.LeaveRoomResponse
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
+import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeFoundException
 import com.psyluckco.sqwads.core.model.Response
+import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import java.time.ZoneId
 import javax.inject.Inject
 
 class RoomServiceImpl @Inject constructor(
@@ -41,6 +47,7 @@ class RoomServiceImpl @Inject constructor(
 
             if(values != null && !values.isEmpty) {
                 val rooms = values.toObjects(FirebaseRoom::class.java)
+
                 trySend(rooms)
             } else {
                 trySend(emptyList())
@@ -60,15 +67,14 @@ class RoomServiceImpl @Inject constructor(
             }
 
             if(value != null && value.exists()) {
-                trySend(value.toObject<FirebaseRoom>())
+                val room = value.toObject<FirebaseRoom>() ?: throw FirebaseRoomCouldNotBeFoundException()
+
+                trySend(room)
             } else {
                 trySend(null)
             }
         }
-            
-        
-        
-
+        awaitClose()
     }
 
     override suspend fun createNewRoom(roomName: String): CreateRoomResponse = runCatching {
