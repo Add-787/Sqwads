@@ -18,25 +18,22 @@ import com.google.android.libraries.identity.googleid.GoogleIdTokenParsingExcept
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.psyluckco.google.BuildConfig
 import com.psyluckco.google.GoogleAuthService
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-
 class GoogleAuthServiceImpl @Inject constructor(): GoogleAuthService{
     private var auth: FirebaseAuth = FirebaseAuth.getInstance()
-    private var clientId = "932977409718-1smktmhecn3m039o1of2vrftash1acoh.apps.googleusercontent.com"
-    private var db = Firebase.firestore
+
 
     override suspend fun googleSignIn(context: Context) : FirebaseUser? {
+
         val signInWithGoogleOption: GetSignInWithGoogleOption =
-            GetSignInWithGoogleOption.Builder(serverClientId = clientId)
-            .setNonce("sqwads")
+            GetSignInWithGoogleOption.Builder(serverClientId = BuildConfig.OAUTH_CLIENT_ID)
+            .setNonce(BuildConfig.NONCE)
         .build()
         val request: GetCredentialRequest = GetCredentialRequest.Builder()
             .addCredentialOption(signInWithGoogleOption)

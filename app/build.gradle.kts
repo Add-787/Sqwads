@@ -21,8 +21,9 @@ android {
             useSupportLibrary = true
         }
         multiDexEnabled = true
-    }
 
+    }
+    buildFeatures.buildConfig = true
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -42,7 +43,7 @@ dependencies {
     implementation(projects.core.firebase)
     implementation(projects.core.design)
     implementation(projects.core.common)
-
+    implementation(projects.core.google)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)

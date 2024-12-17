@@ -1,3 +1,12 @@
+import java.util.Properties
+
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
+}
+
 plugins {
     alias(libs.plugins.sqwads.android.library)
     alias(libs.plugins.sqwads.android.hilt)
@@ -7,8 +16,15 @@ android {
     namespace = "com.psyluckco.google"
     compileSdk = 34
 
+    buildFeatures.buildConfig = true
+    
     defaultConfig {
         multiDexEnabled = true
+        val oauthClientId = localProperties["OAUTH_CLIENT_ID"] as String? ?: ""
+        buildConfigField("String", "OAUTH_CLIENT_ID", "\"$oauthClientId\"")
+        val nonce = localProperties["NONCE"] as String? ?: "default_nonce"
+        buildConfigField("String", "NONCE", "\"$nonce\"")
+
     }
 }
 
