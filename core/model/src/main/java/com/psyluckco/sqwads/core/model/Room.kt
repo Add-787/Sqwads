@@ -7,5 +7,6 @@ data class Room(
     @DocumentId val id: String,
     val name: String,
     val members: List<String>,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val createdBy: String?
 )

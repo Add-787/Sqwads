@@ -1,6 +1,7 @@
 package com.psyluckco.firebase
 
 import com.psyluckco.sqwads.core.model.Response
+import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
 import kotlinx.coroutines.flow.Flow
 

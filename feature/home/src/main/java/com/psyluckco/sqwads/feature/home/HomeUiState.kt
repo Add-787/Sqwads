@@ -11,9 +11,10 @@ data class HomeUiState(
 
 sealed class HomeEvent {
     data object OnProfileClicked : HomeEvent()
-    data class OnRoomClicked(val roomId : String) : HomeEvent()
+    data class OnRoomCreated(val roomId : String) : HomeEvent()
+    data class OnRoomJoining(val roomId: String) : HomeEvent()
     data class OnLoadingStateChanged(val state: LoadingState) : HomeEvent()
-    data class OnNewRoomCreated(val roomName: String) : HomeEvent()
+    data class OnRoomNameProvided(val roomName: String) : HomeEvent()
     data object OnEditRoomNameDialogOpened : HomeEvent()
     data object OnEditRoomNameDialogClosed : HomeEvent()
 }

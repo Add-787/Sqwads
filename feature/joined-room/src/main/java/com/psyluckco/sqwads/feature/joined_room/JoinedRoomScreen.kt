@@ -11,7 +11,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +25,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -57,20 +55,19 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun JoinedRoomRoute(
-    id: String,
+    roomId: String,
     popUp: () -> Unit,
     navigateToGame: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: JoinedRoomViewModel = hiltViewModel()
 ) {
 
+    LaunchedEffect(key1 = Unit) {
+        viewModel.initialize(roomId)
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-
-    LaunchedEffect(key1 = id) {
-
-
-    }
 
     /**
      * Uses [rememberUpdatedState] for `onEvent` to prevent unnecessary recompositions by maintaining
@@ -84,15 +81,17 @@ internal fun JoinedRoomRoute(
         }
     )
 
-    if(uiState.loadingState is LoadingState.Loading) {
-        SqwadsProgressLoadingDialog(id = AppText.placeholder)
-    }
-
     JoinedRoomScreen(
         uiState = uiState,
         popUp = popUp,
         onEvent = onEvent
     )
+
+    if(uiState.loadingState is LoadingState.Loading) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            SqwadsProgressLoadingDialog(id = AppText.placeholder)
+        }
+    }
 
 
 }
@@ -124,6 +123,8 @@ fun JoinedRoomScreen(
             JoinedMembersCard(
                 members = uiState.members
             )
+
+            Spacer(modifier = Modifier.height(29.dp))
 
             GameInfoCard()
 
@@ -194,7 +195,7 @@ fun GameInfoCard(modifier: Modifier = Modifier) {
 
     Card(
         modifier = Modifier
-            .fillMaxSize(),
+            .height(400.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),

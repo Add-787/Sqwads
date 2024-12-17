@@ -8,8 +8,9 @@ interface UserRepository {
 
     suspend fun saveUser(id: String, username: String, email: String)
     suspend fun isUserInDatabase(email: String): Result<Boolean>
-    suspend fun getUser(): FirebaseUser
+    suspend fun getLoggedInUser(): FirebaseUser
     suspend fun getUserRef() : DocumentReference
-    fun getUserFlow(): Flow<FirebaseUser?>
+    fun getLoggedInUserFlow(): Flow<FirebaseUser?>
+    suspend fun getUserInfo(doc: DocumentReference) : FirebaseUser
 
 }

@@ -11,6 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.dataObjects
+import com.google.firebase.firestore.toObject
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
@@ -39,7 +40,7 @@ class UserDataSource @Inject constructor(
         querySnapshot.size() > 0
     }
 
-    override suspend fun getUser(): FirebaseUser = auth.currentUser?.uid?.let {
+    override suspend fun getLoggedInUser(): FirebaseUser = auth.currentUser?.uid?.let {
             userId ->
             getUserDocRef(userId).get().await().toObject(FirebaseUser::class.java)
         } ?: throw FirebaseUserIsNullException()
@@ -50,11 +51,21 @@ class UserDataSource @Inject constructor(
         } ?: throw FirebaseUserIsNullException()
     }
 
-    override fun getUserFlow(): Flow<FirebaseUser?> {
+    override fun getLoggedInUserFlow(): Flow<FirebaseUser?> {
         return auth.currentUser?.uid?.let {
             userId -> getUserDocRef(userId).dataObjects<FirebaseUser>()
         } ?: throw FirebaseUserIsNullException()
     }
+
+    override suspend fun getUserInfo(doc: DocumentReference): FirebaseUser {
+        return getUserDocRef(doc.id).get().await().toObject(FirebaseUser:: class.java) ?: throw FirebaseUserIsNullException()
+
+    }
+
+//    override suspend fun getUserInfo(id: String): FirebaseUser {
+//        return getUserDocRef(id).get().await().toObject(FirebaseUser:: class.java) ?: throw FirebaseUserIsNullException()
+//
+//    }
 
     private val userColRef by lazy { firestore.collection(USERS) }
     private fun getUserDocRef(id: String) = userColRef.document(id)

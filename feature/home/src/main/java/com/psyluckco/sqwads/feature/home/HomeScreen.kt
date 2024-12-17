@@ -63,6 +63,23 @@ internal fun HomeRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val navigationState by viewModel.navigationState.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = navigationState) {
+        fun performNavigation(action: () -> Unit) {
+            action()
+            viewModel.resetNavigation()
+        }
+
+        with(navigationState) {
+            when(this) {
+                NavigationState.NavigateToProfile -> TODO()
+                is NavigationState.NavigateToRoom -> performNavigation { navigateToRoom(this.roomId) }
+                NavigationState.None -> Unit
+            }
+        }
+
+    }
+
     /**
      * Uses [rememberUpdatedState] for `onEvent` to prevent unnecessary recompositions by maintaining
      * a stable reference. This method ensures minimal performance impact and efficient UI updates by
@@ -109,7 +126,8 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(9.dp))
 
         JoinRoomsSection(
-            rooms = uiState.rooms
+            rooms = uiState.rooms,
+            onEvent = onEvent
         )
 
     }
@@ -117,7 +135,7 @@ fun HomeScreen(
     if(uiState.isDialogOpened) {
         DefaultEditRoomDialog(
             title = AppText.edit_room_dialog_header,
-            onConfirm = { onEvent(HomeEvent.OnNewRoomCreated(it)) },
+            onConfirm = { onEvent(HomeEvent.OnRoomNameProvided(it)) },
             onDismiss = { onEvent(HomeEvent.OnEditRoomNameDialogClosed) }
         )
     }
@@ -180,19 +198,22 @@ fun HomeScreenPreview() {
             id = "1",
             name = "test_room_1",
             members = listOf("user1","user2"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user1"
         ),
         Room(
             id = "2",
             name = "test_room_2",
             members = listOf("user3","user4","user5"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user3"
         ),
         Room(
             id = "3",
             name = "test_room_3",
             members = listOf("user6","user7"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user6"
         )
     )
 
@@ -217,19 +238,22 @@ private fun HomeScreenDarkPreview() {
             id = "1",
             name = "test_room_1",
             members = listOf("user1","user2"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user1"
         ),
         Room(
             id = "2",
             name = "test_room_2",
             members = listOf("user3","user4","user5"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user3"
         ),
         Room(
             id = "3",
             name = "test_room_3",
             members = listOf("user6","user7"),
-            createdAt = LocalDateTime.now()
+            createdAt = LocalDateTime.now(),
+            createdBy = "user6"
         )
     )
 
@@ -289,6 +313,7 @@ private fun CreateNewRoomCard(
 @Composable
 fun JoinRoomsSection(
     rooms: List<Room>,
+    onEvent: (HomeEvent) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column {
@@ -307,7 +332,9 @@ fun JoinRoomsSection(
             items(rooms) {
                 room -> RoomCard(
                     room = room,
-                    navigateToRoom = { }
+                    navigateToRoom = {
+                        onEvent(HomeEvent.OnRoomJoining(room.id))
+                    }
                 )
 
             }
