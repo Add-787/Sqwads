@@ -18,15 +18,20 @@ data class FirebaseRoom(
     val isOpened: Boolean = true
 ) {
 
-    fun toRoom() : Room {
+    fun toRoom(
+
+    ) : Room {
+
+
 
         return Room(
             id = id,
             name = name,
             members = members.map { ref -> ref.id },
-            createdAt = createdAt!!.toDate().toInstant()
+            createdAt = createdAt.toDate().toInstant()
                 .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
+                .toLocalDateTime(),
+            createdBy = createdBy?.id
         )
     }
 
