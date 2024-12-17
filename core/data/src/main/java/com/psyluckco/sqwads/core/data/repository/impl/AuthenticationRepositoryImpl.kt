@@ -50,8 +50,7 @@ class AuthenticationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signInWithGoogle(context: Context): Result<String> = runCatchingWithContext(ioDispatcher){
-
         val result = googleAuthService.googleSignIn(context)
-        return@runCatchingWithContext ""
+        return@runCatchingWithContext result?.uid.toString()
     }
 }

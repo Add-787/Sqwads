@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.sqwads.android.application.compose)
     alias(libs.plugins.sqwads.android.hilt)
     alias(libs.plugins.sqwads.android.application.firebase)
+    alias(libs.plugins.gms)
 }
 
 android {
@@ -45,6 +46,7 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
