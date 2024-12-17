@@ -79,31 +79,10 @@ class GoogleAuthServiceImpl @Inject constructor(): GoogleAuthService{
     private suspend fun firebaseAuthWithGoogle(idToken: String) : FirebaseUser? {
         return try {
             val credential = GoogleAuthProvider.getCredential(idToken, null)
-            val user = auth.signInWithCredential(credential).await().user
-            //add user to firestore
-            if (user != null) {
-                addUserToDb(user)
-            }
-            
-            user
+            auth.signInWithCredential(credential).await().user
         }catch (e: Exception){
             println(e)
             null
-        }
-    }
-    
-    private suspend fun addUserToDb(user: FirebaseUser){
-        val userData = hashMapOf(
-            "name" to  (user.displayName ?: "Unknown"),
-            "email" to (user.email ?: "No email")
-        )
-        try {
-            db.collection("users")
-                .document(user.uid)
-                .set(userData)
-                .await()
-        }catch (e: Exception){
-            println(e)
         }
     }
 }
