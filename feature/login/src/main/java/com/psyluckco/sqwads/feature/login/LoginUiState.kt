@@ -6,6 +6,7 @@
 
 package com.psyluckco.sqwads.feature.login
 
+import android.content.Context
 import com.psyluckco.sqwads.core.model.LoadingState
 
 data class LoginUiState(
@@ -21,6 +22,7 @@ sealed class LoginEvent {
     data object OnLoginClicked : LoginEvent()
     data object OnRegisterClicked : LoginEvent()
     data object OnForgotPasswordClicked : LoginEvent()
+    data class OnGoogleSignInClicked(val context: Context) : LoginEvent()
 }
 
 sealed class NavigationState {

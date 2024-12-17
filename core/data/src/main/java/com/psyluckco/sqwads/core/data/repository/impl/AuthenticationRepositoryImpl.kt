@@ -6,8 +6,10 @@
 
 package com.psyluckco.sqwads.core.data.repository.impl
 
+import android.content.Context
 import com.psyluckco.firebase.AccountService
 import com.psyluckco.firebase.UserRepository
+import com.psyluckco.google.GoogleAuthService
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
 import com.psyluckco.sqwads.core.data.util.runCatchingWithContext
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class AuthenticationRepositoryImpl @Inject constructor(
     private val accountService : AccountService,
     private val userRepository: UserRepository,
+    private val googleAuthService: GoogleAuthService,
     @Dispatcher(SqwadsDispatchers.IO) private val ioDispatcher : CoroutineDispatcher
 ) : AuthenticationRepository {
     override suspend fun signInWithEmailAndPassword(email: String, password: String): Result<String> =
@@ -44,5 +47,13 @@ class AuthenticationRepositoryImpl @Inject constructor(
         accountService.sendEmailVerification()
 
         return@runCatchingWithContext result.user?.uid.toString()
+    }
+
+    override suspend fun signInWithGoogle(context: Context): Result<String> = runCatchingWithContext(ioDispatcher){
+        val user = googleAuthService.googleSignIn(context)
+        if(user != null){
+            userRepository.saveUser(user.uid, user.displayName ?: "Unknown",user.email ?: "No email")
+        }
+        return@runCatchingWithContext user?.uid.toString()
     }
 }

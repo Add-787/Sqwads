@@ -12,4 +12,5 @@ dependencies {
     implementation(projects.core.firebase)
 
     implementation(libs.firebase.auth)
+    implementation(project(":core:google"))
 }

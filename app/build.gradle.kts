@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.sqwads.android.application.compose)
     alias(libs.plugins.sqwads.android.hilt)
     alias(libs.plugins.sqwads.android.application.firebase)
+    alias(libs.plugins.gms)
 }
 
 android {
@@ -20,8 +21,9 @@ android {
             useSupportLibrary = true
         }
         multiDexEnabled = true
-    }
 
+    }
+    buildFeatures.buildConfig = true
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -41,10 +43,11 @@ dependencies {
     implementation(projects.core.firebase)
     implementation(projects.core.design)
     implementation(projects.core.common)
-
+    implementation(projects.core.google)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.firebase.auth)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

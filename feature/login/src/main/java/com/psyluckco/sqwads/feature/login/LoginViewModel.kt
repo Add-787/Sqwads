@@ -6,6 +6,8 @@
 
 package com.psyluckco.sqwads.feature.login
 
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 import com.google.android.play.integrity.internal.i
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
@@ -45,6 +47,7 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
             is LoginEvent.OnLoginClicked -> { onLoginClick() }
             is LoginEvent.OnPasswordChanged -> _uiState.update { it.copy(password = event.password) }
+            is LoginEvent.OnGoogleSignInClicked -> { onGoogleSignInClicked(event.context) }
             LoginEvent.OnRegisterClicked -> _navigationState.update { NavigationState.NavigateToRegister }
         }
     }
@@ -86,4 +89,13 @@ class LoginViewModel @Inject constructor(
             }
     }
 
+    private fun onGoogleSignInClicked(context: Context) = launchCatching {
+        authenticationRepository.signInWithGoogle(context).onSuccess { userName ->
+            onEvent(LoginEvent.OnLoadingStateChanged(LoadingState.Idle))
+            delay(500)
+            _navigationState.update { NavigationState.NavigateToHome(userName) }
+        }.onFailure {
+            println("AUth Failed - google sign in")
+        }
+    }
 }
