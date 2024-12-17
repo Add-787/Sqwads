@@ -1,4 +1,4 @@
-package com.psyluckco.sqwads.feature.home
+ package com.psyluckco.sqwads.feature.home
 
 import androidx.compose.ui.input.key.Key.Companion.Home
 import androidx.navigation.NavController
@@ -25,10 +25,9 @@ fun NavController.navigateToHome(
 
 fun NavGraphBuilder.homeScreen(
     navigateToRoom: (String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: (String) -> Unit
 ) {
     composable<Home> {
-
         HomeRoute(
             navigateToRoom = navigateToRoom,
             navigateToProfile = navigateToProfile

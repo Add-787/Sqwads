@@ -52,7 +52,7 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 @Composable
 internal fun HomeRoute(
     navigateToRoom: (String) -> Unit,
-    navigateToProfile: () -> Unit,
+    navigateToProfile: (String) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -81,23 +81,23 @@ internal fun HomeRoute(
 
     HomeScreen(
         uiState = uiState,
-        onEvent = onEvent
+        onEvent = onEvent,
+        navigateToProfile = navigateToProfile,
     )
-
-
-
 }
 
 @Composable
 fun HomeScreen(
     uiState: HomeUiState,
     onEvent: (HomeEvent) -> Unit,
+    navigateToProfile: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
+            navigateToProfile = navigateToProfile,
         )
 
         CreateNewRoomCard(
@@ -126,7 +126,8 @@ fun HomeScreen(
 @Composable
 fun HomeHeader(
     modifier: Modifier = Modifier,
-    displayName: String = "Guest"
+    displayName: String = "Guest",
+    navigateToProfile: (String) -> Unit,
 ) {
     HeaderWrapper(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -147,7 +148,10 @@ fun HomeHeader(
                 modifier = Modifier
                     .size(45.dp)
                     .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.onBackground),
+                    .background(MaterialTheme.colorScheme.onBackground)
+                    .clickable {
+                        
+                    },
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -198,7 +202,8 @@ fun HomeScreenPreview() {
                 loadingState = LoadingState.Idle,
                 rooms = fakeRooms
             ),
-            onEvent = {}
+            onEvent = {},
+            navigateToProfile = {}
         )
     }
 }
@@ -234,7 +239,8 @@ private fun HomeScreenDarkPreview() {
                 loadingState = LoadingState.Idle,
                 rooms = fakeRooms
             ),
-            onEvent = { }
+            onEvent = { },
+            navigateToProfile = {}
         )
     }
 }

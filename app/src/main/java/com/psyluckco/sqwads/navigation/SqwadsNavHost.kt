@@ -21,6 +21,8 @@ import com.psyluckco.sqwads.feature.joined_room.navigateToJoinedRoom
 import com.psyluckco.sqwads.feature.login.Login
 import com.psyluckco.sqwads.feature.login.loginScreen
 import com.psyluckco.sqwads.feature.login.navigateToLogin
+import com.psyluckco.sqwads.feature.profile.navigateToProfile
+import com.psyluckco.sqwads.feature.profile.profileScreen
 
 @Composable
 fun SqwadsNavHost(
@@ -44,7 +46,7 @@ fun SqwadsNavHost(
         )
 
         homeScreen(
-            navigateToProfile = { },
+            navigateToProfile = navHostController::navigateToProfile,
             navigateToRoom = navHostController::navigateToJoinedRoom
         )
 
@@ -60,6 +62,7 @@ fun SqwadsNavHost(
 
         forgotPasswordScreen(navigateToLogin = navHostController::navigateToLogin)
 
+        profileScreen()
     }
 
 }
