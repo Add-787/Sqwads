@@ -53,9 +53,10 @@ class HomeViewModel @Inject constructor(
     }
 
 
+
     fun onEvent(event: HomeEvent) {
         when(event) {
-            HomeEvent.OnProfileClicked -> { }
+            HomeEvent.OnProfileClicked -> { _navigationState.update { NavigationState.NavigateToProfile } }
             is HomeEvent.OnRoomCreated -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
             is HomeEvent.OnRoomNameProvided -> { onNewRoomCreated(event.roomName) }
             is HomeEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }

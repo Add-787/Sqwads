@@ -8,12 +8,10 @@ import androidx.navigation.navOptions
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Profile(
-    val id: String
-)
+data object Profile
 
 fun NavController.navigateToProfile(
-    userId: String,
+
     navOptions: NavOptions? = navOptions{
         popUpTo(0) {
             inclusive = true
@@ -21,7 +19,7 @@ fun NavController.navigateToProfile(
         launchSingleTop = true
     }
 ){
-    navigate(Profile(userId), navOptions)
+    navigate(Profile, navOptions)
 }
 
 fun NavGraphBuilder.profileScreen(){

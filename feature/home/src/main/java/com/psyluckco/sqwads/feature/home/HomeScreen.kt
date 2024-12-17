@@ -52,7 +52,7 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 @Composable
 internal fun HomeRoute(
     navigateToRoom: (String) -> Unit,
-    navigateToProfile: (String) -> Unit,
+    navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -72,7 +72,7 @@ internal fun HomeRoute(
 
         with(navigationState) {
             when(this) {
-                NavigationState.NavigateToProfile -> TODO()
+                NavigationState.NavigateToProfile -> performNavigation { navigateToProfile() }
                 is NavigationState.NavigateToRoom -> performNavigation { navigateToRoom(this.roomId) }
                 NavigationState.None -> Unit
             }
@@ -99,7 +99,6 @@ internal fun HomeRoute(
     HomeScreen(
         uiState = uiState,
         onEvent = onEvent,
-        navigateToProfile = navigateToProfile,
     )
 }
 
@@ -107,14 +106,13 @@ internal fun HomeRoute(
 fun HomeScreen(
     uiState: HomeUiState,
     onEvent: (HomeEvent) -> Unit,
-    navigateToProfile: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
-            navigateToProfile = navigateToProfile,
+            onEvent = onEvent,
         )
 
         CreateNewRoomCard(
@@ -145,7 +143,7 @@ fun HomeScreen(
 fun HomeHeader(
     modifier: Modifier = Modifier,
     displayName: String = "Guest",
-    navigateToProfile: (String) -> Unit,
+    onEvent: (HomeEvent) -> Unit,
 ) {
     HeaderWrapper(modifier = modifier.fillMaxWidth()) {
         Row(
@@ -159,7 +157,6 @@ fun HomeHeader(
                 text = "Hi $displayName!",
                 style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.onBackground
-
             )
 
             Box(
@@ -168,7 +165,7 @@ fun HomeHeader(
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.onBackground)
                     .clickable {
-                        
+                        onEvent(HomeEvent.OnProfileClicked)
                     },
                 contentAlignment = Alignment.Center
             ) {
@@ -224,7 +221,6 @@ fun HomeScreenPreview() {
                 rooms = fakeRooms
             ),
             onEvent = {},
-            navigateToProfile = {}
         )
     }
 }
@@ -264,7 +260,6 @@ private fun HomeScreenDarkPreview() {
                 rooms = fakeRooms
             ),
             onEvent = { },
-            navigateToProfile = {}
         )
     }
 }
