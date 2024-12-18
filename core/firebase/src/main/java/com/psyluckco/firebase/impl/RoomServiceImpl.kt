@@ -6,10 +6,16 @@
 
 package com.psyluckco.firebase.impl
 
+import android.util.Log
 import com.google.android.play.integrity.internal.m
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.firestore.ListenSource
+import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.SnapshotListenOptions
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.toObject
 import com.google.firebase.firestore.toObjects
 import com.psyluckco.firebase.CreateRoomResponse
@@ -40,14 +46,15 @@ class RoomServiceImpl @Inject constructor(
         val openedRoomsQuery = roomsColRef
             .whereEqualTo("isOpened", true)
 
-        openedRoomsQuery.addSnapshotListener { values, error ->
+        openedRoomsQuery
+            .addSnapshotListener() { values, error ->
+
             if(error != null) {
                 return@addSnapshotListener
             }
 
             if(values != null && !values.isEmpty) {
                 val rooms = values.toObjects(FirebaseRoom::class.java)
-
                 trySend(rooms)
             } else {
                 trySend(emptyList())
@@ -67,6 +74,7 @@ class RoomServiceImpl @Inject constructor(
             }
 
             if(value != null && value.exists()) {
+
                 val room = value.toObject<FirebaseRoom>() ?: throw FirebaseRoomCouldNotBeFoundException()
 
                 trySend(room)
@@ -96,7 +104,6 @@ class RoomServiceImpl @Inject constructor(
 //            members = listOf(user),
 //            isOpened = true
 //        )
-
         roomsColRef.add(roomData).await().id
     }
 

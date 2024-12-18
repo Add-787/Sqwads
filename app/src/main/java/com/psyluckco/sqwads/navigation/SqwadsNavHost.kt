@@ -62,7 +62,9 @@ fun SqwadsNavHost(
 
         forgotPasswordScreen(navigateToLogin = navHostController::navigateToLogin)
 
-        profileScreen()
+        profileScreen(
+            popup = navHostController::popBackStack,
+        )
     }
 
 }

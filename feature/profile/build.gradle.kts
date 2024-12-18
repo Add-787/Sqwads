@@ -6,13 +6,10 @@ plugins {
 
 android {
     namespace = "com.psyluckco.sqwads.feature.profile"
-
 }
 
 dependencies {
-
     implementation(libs.firebase.auth)
     implementation(libs.androidx.navigation.compose)
-
-
+    implementation(project(":core:firebase"))
 }

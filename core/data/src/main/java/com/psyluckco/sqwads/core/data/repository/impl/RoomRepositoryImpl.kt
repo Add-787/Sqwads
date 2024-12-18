@@ -12,6 +12,7 @@ import com.psyluckco.sqwads.core.model.di.Dispatcher
 import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import java.time.ZoneId
@@ -30,8 +31,14 @@ class RoomRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getAllOpenRooms(): Flow<List<Room>> {
+
         return roomService.loadAllOpenRooms().map {
-            firebaseRooms -> firebaseRooms.map { it.toRoom() }
+            firebaseRooms -> firebaseRooms
+            .filter { it.createdAt?.toDate() != null }
+                .map { it.toRoom() }
+        }.catch {
+            println("This error")
+            println(it)
         }
     }
 

@@ -20,6 +20,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -88,9 +89,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun getAllOpenRooms() = launchCatching {
-        roomRepository.getAllOpenRooms().collectLatest {
-            rooms -> _uiState.update { it.copy(rooms = rooms) }
-        }
-
+        roomRepository.getAllOpenRooms()
+            .catch {
+                println(it)
+            }
+            .collectLatest { rooms -> _uiState.update { it.copy(rooms = rooms) } }
     }
 }

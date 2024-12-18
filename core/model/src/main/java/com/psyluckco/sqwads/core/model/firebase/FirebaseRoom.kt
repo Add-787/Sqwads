@@ -18,12 +18,7 @@ data class FirebaseRoom(
     val isOpened: Boolean = true
 ) {
 
-    fun toRoom(
-
-    ) : Room {
-
-
-
+    fun toRoom() : Room {
         return Room(
             id = id,
             name = name,
@@ -31,7 +26,7 @@ data class FirebaseRoom(
             createdAt = createdAt.toDate().toInstant()
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime(),
-            createdBy = createdBy?.id
+            createdBy = createdBy?.id,
         )
     }
 

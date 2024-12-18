@@ -8,6 +8,8 @@ package com.psyluckco.sqwads.core.design.component
 
 import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.CatchingPokemon
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -29,17 +31,27 @@ import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 @Composable
 fun SqwadsTopAppBar(
     @StringRes textId: Int,
-    modifier: Modifier = Modifier
+    showNavigationIcon: Boolean = false,
+    onBackClicked: () ->  Unit = {},
+    showActionIcon: Boolean = false,
 ) {
-
     TopAppBar(
         title = { Text(stringResource(id = textId)) },
+        navigationIcon = {
+            if(showNavigationIcon)
+                IconButton(onClick = onBackClicked) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = null)
+                }
+        },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(
-                    imageVector = Icons.Default.CatchingPokemon,
-                    contentDescription = null)
-            }
+            if(showActionIcon)
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Default.CatchingPokemon,
+                        contentDescription = null)
+                }
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
