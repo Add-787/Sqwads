@@ -27,8 +27,12 @@ fun NavGraphBuilder.homeScreen(
     navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit
 ) {
+
     composable<Home> {
+        backStackEntry ->
+        val homePage = backStackEntry.toRoute<Home>()
         HomeRoute(
+            userId = homePage.id,
             navigateToRoom = navigateToRoom,
             navigateToProfile = navigateToProfile
         )

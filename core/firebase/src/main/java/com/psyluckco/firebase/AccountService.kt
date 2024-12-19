@@ -1,8 +1,10 @@
 package com.psyluckco.firebase
 
 import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.psyluckco.sqwads.core.model.Response
+import kotlinx.coroutines.flow.Flow
 
 typealias SendEmailVerificationResponse = Response<Boolean>
 typealias ReloadUserResponse = Response<Boolean>
@@ -23,4 +25,5 @@ interface AccountService {
     suspend fun sendPasswordResetEmail(email: String): SendPasswordResetEmailResponse
     fun signOut()
     suspend fun revokeAccess() : Result<Unit>
+    suspend fun getAccountStatus() : Flow<FirebaseAuth>
 }

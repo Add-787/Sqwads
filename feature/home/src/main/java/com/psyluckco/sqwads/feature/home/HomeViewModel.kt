@@ -53,8 +53,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
-
     fun onEvent(event: HomeEvent) {
         when(event) {
             HomeEvent.OnProfileClicked -> { _navigationState.update { NavigationState.NavigateToProfile } }

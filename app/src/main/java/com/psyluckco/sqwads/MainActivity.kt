@@ -19,6 +19,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -30,27 +31,18 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
-
         super.onCreate(savedInstanceState)
-        viewModel.initialize()
-
-        var isEmailVerified by  mutableStateOf<AccountState>(AccountState.Loading)
 
         scopeWithLifecycle {
-            viewModel.accountState.filter { it != AccountState.Loading }.first().let {
-                state -> isEmailVerified = state
-            }
-        }
-
-        splashScreen.setKeepOnScreenCondition {
-            isEmailVerified == AccountState.Loading
-        }
-
-        enableEdgeToEdge()
-        setContent {
-            SqwadsTheme {
-                if(isEmailVerified != AccountState.Loading) {
-                    SqwadsApp(accountState = isEmailVerified)
+            viewModel.accountState.collectLatest {
+                splashScreen.setKeepOnScreenCondition {
+                    it == AccountState.Loading
+                }
+                enableEdgeToEdge()
+                setContent {
+                    SqwadsTheme {
+                        SqwadsApp(accountState = it)
+                    }
                 }
             }
         }

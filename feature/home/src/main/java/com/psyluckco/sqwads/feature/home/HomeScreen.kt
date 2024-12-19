@@ -51,6 +51,7 @@ import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
 internal fun HomeRoute(
+    userId: String,
     navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit,
     modifier: Modifier = Modifier,
