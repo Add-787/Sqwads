@@ -2,11 +2,13 @@ package com.psyluckco.sqwads.feature.home
 
 import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.Room
+import com.psyluckco.sqwads.core.model.firebase.FirebaseUser
 
 data class HomeUiState(
     val loadingState : LoadingState = LoadingState.Idle,
     val isDialogOpened : Boolean = false,
-    val rooms: List<Room> = emptyList()
+    val rooms: List<Room> = emptyList(),
+    val userName: String = "",
 )
 
 sealed class HomeEvent {

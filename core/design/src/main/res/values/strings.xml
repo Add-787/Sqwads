@@ -16,6 +16,7 @@
     <string name="back_to_login_button">Login</string>
     <string name="password_recovery_button">Recover</string>
     <string name="placeholder_section_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</string>
+    <string name="create_room_button_text">Create new room</string>
     <string name="join_rooms_section_header">Join Rooms</string>
     <string name="joined_members_card_header">Joined Members</string>
     <string name="leave_room_button">Leave Room</string>
@@ -24,4 +25,9 @@
     <string name="edit_room_dialog_section_text">Enter the name of your newly created room.</string>
     <string name="edit_room_field_label_text">Room Name</string>
     <string name="edit_room_dialog_header">Add Room</string>
+    <string name="profile_page_header">Profile</string>
+    <string name="user_name_label">Username</string>
+    <string name="email_label">Email</string>
+    <string name="password_label">Password</string>
+    <string name="logout_btn_label">Logout</string>
 </resources>

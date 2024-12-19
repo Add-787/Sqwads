@@ -20,6 +20,10 @@ import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseUserIsNullException
 import com.psyluckco.sqwads.core.model.Response
+import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -112,5 +116,12 @@ class AccountServiceImpl @Inject constructor(
 
     override suspend fun revokeAccess(): Result<Unit> = runCatching {
         auth.currentUser?.delete()?.await()
+    }
+
+    override suspend fun getAccountStatus() : Flow<FirebaseAuth> = callbackFlow{
+        auth.addAuthStateListener {
+            firebaseAuth -> trySend(firebaseAuth)
+        }
+        awaitClose()
     }
 }

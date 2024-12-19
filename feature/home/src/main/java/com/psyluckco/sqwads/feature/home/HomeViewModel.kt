@@ -8,15 +8,13 @@ package com.psyluckco.sqwads.feature.home
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
+import com.psyluckco.firebase.AccountService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.model.LoadingState
-import com.psyluckco.sqwads.core.model.di.Dispatcher
-import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,6 +27,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
+    private val accountService : AccountService,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -47,13 +46,11 @@ class HomeViewModel @Inject constructor(
             return
         }
         initializeCalled = true
-
+        _uiState.update { it.copy(userName = accountService.displayName ?: "") }
         viewModelScope.launch {
             launch { getAllOpenRooms() }
         }
     }
-
-
 
     fun onEvent(event: HomeEvent) {
         when(event) {
