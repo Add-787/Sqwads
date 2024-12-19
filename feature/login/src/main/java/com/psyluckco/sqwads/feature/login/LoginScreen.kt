@@ -109,7 +109,7 @@ fun LoginScreen(
 
                 DefaultTextField(
                     value = uiState.email,
-                    label = AppText.placeholder,
+                    label = AppText.email_label,
                     leadingIcon = Icons.Default.Email,
                     onValueChange = { onEvent(LoginEvent.OnEmailChanged(it)) }
                 )
@@ -120,7 +120,7 @@ fun LoginScreen(
                 ) {
                     DefaultPasswordField(
                         value = uiState.password,
-                        label = AppText.placeholder,
+                        label = AppText.password_label,
                         leadingIcon = Icons.Default.Lock,
                         onValueChange = { onEvent(LoginEvent.OnPasswordChanged(it)) }
                     )

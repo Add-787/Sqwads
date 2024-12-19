@@ -14,16 +14,21 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,8 +40,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.psyluckco.sqwads.core.design.component.AppWrapper
@@ -47,6 +54,7 @@ import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
 import com.psyluckco.sqwads.core.model.Room
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
@@ -113,6 +121,7 @@ fun HomeScreen(
     AppWrapper(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
         HomeHeader(
             modifier = modifier,
+            displayName = uiState.userName,
             onEvent = onEvent,
         )
 
@@ -122,7 +131,7 @@ fun HomeScreen(
             }
         )
 
-        Spacer(modifier = Modifier.height(9.dp))
+        Spacer(modifier = Modifier.height(5.dp))
 
         JoinRoomsSection(
             rooms = uiState.rooms,
@@ -156,10 +165,12 @@ fun HomeHeader(
         ) {
             Text(
                 text = "Hi $displayName!",
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onBackground
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.onBackground,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f),
             )
-
+            Spacer(modifier = Modifier.width(10.dp))
             Box(
                 modifier = Modifier
                     .size(45.dp)
@@ -272,7 +283,7 @@ private fun CreateNewRoomCard(
 ) {
     Card(
         modifier = Modifier
-            .height(150.dp)
+            .height(120.dp)
             .fillMaxWidth()
             .clickable { creatingNewRoom() },
         colors = CardDefaults.cardColors(
@@ -293,7 +304,7 @@ private fun CreateNewRoomCard(
                     .weight(1f)
                     .fillMaxHeight()
             ) {
-                Text(text = stringResource(id = AppText.placeholder_section_text))
+                Text(text = stringResource(id = AppText.create_room_button_text))
             }
 
             Icon(
@@ -316,26 +327,23 @@ fun JoinRoomsSection(
 
         Text(
             text = stringResource(id = AppText.join_rooms_section_header),
-            style = MaterialTheme.typography.displaySmall,
+            style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.onBackground
         )
-
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(rooms) {
+        Spacer(modifier = Modifier.height(10.dp))
+        LazyColumn (
+            modifier = Modifier.fillMaxWidth(),
+        ){
+            items(rooms){
                 room -> RoomCard(
                     room = room,
                     navigateToRoom = {
                         onEvent(HomeEvent.OnRoomJoining(room.id))
                     }
                 )
-
             }
-            
         }
+
 
     }
 }
@@ -346,47 +354,50 @@ fun RoomCard(
     modifier: Modifier = Modifier,
     navigateToRoom: (String) -> Unit
 ) {
-
-    Card(
-        modifier = Modifier
-            .size(90.dp)
-            .padding(all = 4.dp)
-            .clickable { navigateToRoom(room.name) },
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 7.dp
-        )
-    ) {
-
+    Column(modifier = Modifier.clickable { navigateToRoom(room.name) }){
         Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(vertical = 10.dp)
+                .fillMaxSize()
 
-            Column(
+        ) {
+            Box(
                 modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(5.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .size(35.dp)
+                    .clip(RoundedCornerShape(size = 10.dp))
+                    .background(MaterialTheme.colorScheme.onSurfaceVariant),
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = room.name)
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(4.dp),
+                    tint = MaterialTheme.colorScheme.background,
+
+                )
+            }
+
+            Spacer(modifier = modifier.width(10.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+
+            ) {
+                Text(text = room.name, fontSize = 18.sp)
                 Text(
-                    text = room.createdAt.dayOfWeek.toString(),
+                    text = DateTimeFormatter.ofPattern("dd MMM yy, hh:MM a").format(room.createdAt),
                     style = MaterialTheme.typography.labelSmall
                 )
 
             }
-            Icon(
-                imageVector = Icons.Default.Home,
-                contentDescription = null,
-                modifier = Modifier.size(55.dp)
-            )
-
         }
-
-
+        HorizontalDivider(
+            color = MaterialTheme.colorScheme.surfaceContainerLow
+        )
     }
-
-
 }

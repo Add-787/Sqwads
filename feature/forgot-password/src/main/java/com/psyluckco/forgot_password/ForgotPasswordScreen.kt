@@ -80,7 +80,7 @@ fun ForgotPasswordScreen(
             
             DefaultTextField(
                 value = email,
-                label = R.string.placeholder,
+                label = R.string.email_label,
                 leadingIcon = Icons.Default.Email,
                 onValueChange = onEmailChange
             )
