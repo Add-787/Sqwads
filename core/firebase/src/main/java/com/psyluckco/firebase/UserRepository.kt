@@ -11,6 +11,6 @@ interface UserRepository {
     suspend fun getLoggedInUser(): FirebaseUser
     suspend fun getUserRef() : DocumentReference
     fun getLoggedInUserFlow(): Flow<FirebaseUser?>
-    suspend fun getUserInfo(doc: DocumentReference) : FirebaseUser
+    suspend fun getUserInfo(id: String) : FirebaseUser
 
 }

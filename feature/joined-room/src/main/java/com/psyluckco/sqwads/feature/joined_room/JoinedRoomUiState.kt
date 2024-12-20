@@ -7,10 +7,12 @@
 package com.psyluckco.sqwads.feature.joined_room
 
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Message
 
 data class JoinedRoomUiState(
     val roomName: String = "",
     val members: List<String> = emptyList(),
+    val messages: List<Message> = emptyList(),
     val loadingState: LoadingState = LoadingState.Idle
 )
 

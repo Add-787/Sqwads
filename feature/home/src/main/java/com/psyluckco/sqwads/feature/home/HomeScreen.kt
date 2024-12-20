@@ -138,11 +138,14 @@ fun HomeScreen(
     }
 
     if(uiState.isDialogOpened) {
-        DefaultEditRoomDialog(
-            title = AppText.edit_room_dialog_header,
-            onConfirm = { onEvent(HomeEvent.OnRoomNameProvided(it)) },
-            onDismiss = { onEvent(HomeEvent.OnEditRoomNameDialogClosed) }
-        )
+
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            DefaultEditRoomDialog(
+                title = AppText.edit_room_dialog_header,
+                onConfirm = { onEvent(HomeEvent.OnRoomNameProvided(it)) },
+                onDismiss = { onEvent(HomeEvent.OnEditRoomNameDialogClosed) }
+            )
+        }
     }
 }
 

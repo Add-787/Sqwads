@@ -138,7 +138,8 @@ fun LoginScreen(
 
                 DefaultActionButton(
                     iconType = IconType.Bitmap(painterId = AppDrawable.google),
-                    buttonSize = 80.dp
+                    buttonWidth = 120.dp,
+                    buttonHeight = 80.dp
                 ) {
 
                     onEvent(LoginEvent.OnGoogleSignInClicked(context))

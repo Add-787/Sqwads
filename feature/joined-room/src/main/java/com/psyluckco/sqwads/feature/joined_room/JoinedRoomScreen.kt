@@ -7,30 +7,44 @@
 package com.psyluckco.sqwads.feature.joined_room
 
 import android.content.res.Configuration
+import android.widget.Space
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.MailOutline
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,17 +54,22 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.psyluckco.sqwads.core.design.IconType
 import com.psyluckco.sqwads.core.design.component.AppWrapper
-import com.psyluckco.sqwads.core.design.component.DefaultTextButton
+import com.psyluckco.sqwads.core.design.component.DefaultActionButton
+import com.psyluckco.sqwads.core.design.component.DefaultTextField
 import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.component.SqwadsProgressLoadingDialog
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Message
+import java.time.format.DateTimeFormatter
 import com.psyluckco.sqwads.core.design.R.string as AppText
 
 @Composable
@@ -140,20 +159,11 @@ fun JoinedRoomScreen(
                 members = uiState.members
             )
 
-            Spacer(modifier = Modifier.height(29.dp))
+            Spacer(modifier = Modifier.height(30.dp))
 
-            GameInfoCard()
-
-            DefaultTextButton(
-                text = AppText.leave_room_button,
-                modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.outlinedButtonColors(
-                    containerColor = MaterialTheme.colorScheme.error,
-                    contentColor = MaterialTheme.colorScheme.onError
-                )
-            ) {
-                onEvent(JoinedRoomEvent.LeaveRoomClicked(roomId))
-            }
+            ConversationCard(
+                messages = uiState.messages
+            )
 
         }
 
@@ -168,7 +178,7 @@ fun JoinedMembersCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp),
+            .wrapContentHeight(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -180,6 +190,7 @@ fun JoinedMembersCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .wrapContentHeight()
                 .padding(all = 9.dp)
         ) {
             Text(
@@ -190,10 +201,11 @@ fun JoinedMembersCard(
 
             LazyHorizontalGrid(
                 rows = GridCells.Fixed(1),
+                modifier = Modifier.height(80.dp)
             ) {
                 items(members) {
                     MemberCard(
-                        member = it
+                        memberName = it
                     )
 
                 }
@@ -206,12 +218,44 @@ fun JoinedMembersCard(
     
 }
 
+//@Composable
+//fun GameInfoCard(modifier: Modifier = Modifier) {
+//
+//    Card(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//        colors = CardDefaults.cardColors(
+//            containerColor = MaterialTheme.colorScheme.secondaryContainer
+//        ),
+//        elevation = CardDefaults.cardElevation(
+//            defaultElevation = 28.dp
+//        )
+//    ) {
+//        Column(
+//            modifier = modifier
+//                .fillMaxWidth()
+//                .padding(9.dp)
+//        ) {
+//            Text(
+//                text = stringResource(id = AppText.placeholder),
+//                style = MaterialTheme.typography.titleLarge,
+//                color = MaterialTheme.colorScheme.onBackground
+//            )
+//        }
+//
+//    }
+//
+//}
+
 @Composable
-fun GameInfoCard(modifier: Modifier = Modifier) {
+fun ConversationCard(
+    modifier: Modifier = Modifier,
+    messages: List<Message>
+) {
 
     Card(
         modifier = Modifier
-            .height(400.dp),
+            .fillMaxSize(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -222,15 +266,116 @@ fun GameInfoCard(modifier: Modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(9.dp)
+                .padding(9.dp),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-
-                text = stringResource(id = AppText.placeholder),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground
+            MessagesContent(
+                modifier = Modifier.weight(0.8f),
+                messages = messages
             )
+
+            Row(
+                modifier = Modifier.height(70.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DefaultTextField(
+                    modifier = Modifier.weight(0.7f),
+                    value = "",
+                    label = AppText.placeholder,
+                    leadingIcon = Icons.Default.MailOutline,
+                    onValueChange = { }
+                )
+
+                Spacer(modifier = Modifier.width(12.dp))
+
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .fillMaxHeight(0.8f)
+                        .background(color = MaterialTheme.colorScheme.primary)
+                    ,
+                ) {
+                    Icon(imageVector = Icons.Default.Send, contentDescription = null)
+                }
+            }
         }
+
+    }
+
+}
+
+@Composable
+fun MessagesContent(
+    modifier: Modifier = Modifier,
+    messages: List<Message>
+) {
+    Box(modifier = modifier) {
+        LazyColumn {
+            items(messages) {
+
+                if(it.fromCurrentUser) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        ChatBubble(message = it)
+                        Spacer(modifier = Modifier.width(4.dp))
+                        MemberCard(
+                            memberName = it.sentBy
+                        )
+                    }
+
+
+                } else {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 6.dp)
+                    ) {
+                        MemberCard(
+                            memberName = it.sentBy
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        ChatBubble(message = it)
+                    }
+                }
+            }
+
+        }
+
+    }
+
+}
+
+@Composable
+fun ChatBubble(
+    modifier: Modifier = Modifier,
+    message: Message
+) {
+    Column(
+        modifier = Modifier.width(200.dp),
+        horizontalAlignment = Alignment.End
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            colors = if(!message.fromCurrentUser) CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.background
+            ) else CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ),
+            border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
+        ) {
+            Box(modifier = Modifier.padding(8.dp)) {
+                Text(text = message.text, style = MaterialTheme.typography.headlineSmall)
+            }
+        }
+        Text(
+            text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
+            style = MaterialTheme.typography.labelSmall
+        )
 
     }
 
@@ -239,13 +384,12 @@ fun GameInfoCard(modifier: Modifier = Modifier) {
 @Composable
 fun MemberCard(
     modifier: Modifier = Modifier,
-    member: String = "",
+    memberName: String = "",
 ) {
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
-            .size(65.dp)
             .padding(all = 4.dp)
     ) {
         Box(
@@ -265,7 +409,7 @@ fun MemberCard(
             )
         }
 
-        Text(text = member)
+        Text(text = memberName, style = MaterialTheme.typography.labelSmall)
     }
 }
 
@@ -308,6 +452,20 @@ fun JoinedRoomHeader(
 private fun JoinedRoomScreenPreview() {
 
     val fakeMembers = listOf("user1","user2","user3")
+
+    val fakeMessages = listOf(
+        Message(
+            text = "Hello",
+            sentBy = "user1"
+        ),
+        Message(
+            text = "Hii",
+            sentBy = "user2",
+            fromCurrentUser = true
+        )
+    )
+
+
     SqwadsTheme {
         JoinedRoomScreen(
             roomId = "",
@@ -315,6 +473,7 @@ private fun JoinedRoomScreenPreview() {
             onEvent = { },
             uiState = JoinedRoomUiState(
                 roomName = "test_room",
+                messages = fakeMessages,
                 members = fakeMembers,
             )
         )
@@ -326,6 +485,17 @@ private fun JoinedRoomScreenPreview() {
 @Composable
 private fun JoinedRoomScreenDarkPreview() {
     val fakeMembers = listOf("user1", "user2", "user3")
+    val fakeMessages = listOf(
+        Message(
+            text = "Hello",
+            sentBy = "user1"
+        ),
+        Message(
+            text = "Hii",
+            sentBy = "user2",
+            fromCurrentUser = true
+        )
+    )
 
     SqwadsTheme {
         JoinedRoomScreen(
@@ -335,6 +505,7 @@ private fun JoinedRoomScreenDarkPreview() {
             uiState = JoinedRoomUiState
                 (
                 roomName = "test_room",
+                messages = fakeMessages,
                 members = fakeMembers
             )
         )
