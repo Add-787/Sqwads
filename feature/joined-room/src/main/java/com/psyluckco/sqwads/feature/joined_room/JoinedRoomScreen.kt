@@ -14,13 +14,18 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -156,12 +161,14 @@ fun JoinedRoomScreen(
         ) {
 
             JoinedMembersCard(
+                modifier = Modifier,
                 members = uiState.members
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             ConversationCard(
+                modifier = Modifier.fillMaxSize(),
                 messages = uiState.messages
             )
 
@@ -172,11 +179,12 @@ fun JoinedRoomScreen(
 
 @Composable
 fun JoinedMembersCard(
+    modifier: Modifier = Modifier,
     members: List<String> = emptyList()
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         colors = CardDefaults.cardColors(
@@ -252,10 +260,8 @@ fun ConversationCard(
     modifier: Modifier = Modifier,
     messages: List<Message>
 ) {
-
     Card(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -269,17 +275,17 @@ fun ConversationCard(
                 .padding(9.dp),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
+
             MessagesContent(
-                modifier = Modifier.weight(0.8f),
                 messages = messages
             )
 
             Row(
-                modifier = Modifier.height(70.dp),
+                modifier = Modifier.height(60.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 DefaultTextField(
-                    modifier = Modifier.weight(0.7f),
+                    modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min),
                     value = "",
                     label = AppText.placeholder,
                     leadingIcon = Icons.Default.MailOutline,
@@ -291,8 +297,14 @@ fun ConversationCard(
                 IconButton(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
-                        .fillMaxHeight(0.8f)
+                        .fillMaxHeight(0.85f)
+                        .clip(shape = RoundedCornerShape(9.dp))
                         .background(color = MaterialTheme.colorScheme.primary)
+                        .border(
+                            width = 1.dp,
+                            shape = RoundedCornerShape(9.dp),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     ,
                 ) {
                     Icon(imageVector = Icons.Default.Send, contentDescription = null)
@@ -309,7 +321,7 @@ fun MessagesContent(
     modifier: Modifier = Modifier,
     messages: List<Message>
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxHeight(0.7f)) {
         LazyColumn {
             items(messages) {
 
@@ -359,7 +371,9 @@ fun ChatBubble(
         horizontalAlignment = Alignment.End
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             colors = if(!message.fromCurrentUser) CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ) else CardDefaults.cardColors(
@@ -419,7 +433,7 @@ fun JoinedRoomHeader(
     name: String
 ) {
     HeaderWrapper(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().imePadding()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
