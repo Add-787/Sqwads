@@ -57,15 +57,9 @@ class UserDataSource @Inject constructor(
         } ?: throw FirebaseUserIsNullException()
     }
 
-    override suspend fun getUserInfo(doc: DocumentReference): FirebaseUser {
-        return getUserDocRef(doc.id).get().await().toObject(FirebaseUser:: class.java) ?: throw FirebaseUserIsNullException()
-
+    override suspend fun getUserInfo(id: String): FirebaseUser {
+        return getUserDocRef(id).get().await().toObject(FirebaseUser:: class.java) ?: throw FirebaseUserIsNullException()
     }
-
-//    override suspend fun getUserInfo(id: String): FirebaseUser {
-//        return getUserDocRef(id).get().await().toObject(FirebaseUser:: class.java) ?: throw FirebaseUserIsNullException()
-//
-//    }
 
     private val userColRef by lazy { firestore.collection(USERS) }
     private fun getUserDocRef(id: String) = userColRef.document(id)

@@ -25,18 +25,19 @@ class RoomRepositoryImpl @Inject constructor(
 ) : RoomRepository {
     override suspend fun getRoom(roomId: String): Flow<Room> {
         return roomService.loadRoomData(roomId).filterNotNull().map {
-//            val admin = it.createdBy
-//            val members = it.members.map { ref -> ref.id }
-//            return@map Room(
-//                id = it.id,
-//                name = it.name,
-//                createdAt = it.createdAt.toDate().toInstant()
-//                    .atZone(ZoneId.systemDefault())
-//                    .toLocalDateTime(),
-//                createdBy = "nefv",
-//                members = members
-//            )
-            it.toRoom()
+            val admin = it.createdBy?.id ?: ""
+            val members = it.members.map { ref -> userRepository.getUserInfo(ref.id).name }
+            
+            return@map Room(
+                id = it.id,
+                name = it.name,
+                createdAt = it.createdAt.toDate().toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDateTime(),
+                createdBy = userRepository.getUserInfo(admin).name,
+                members = members
+            )
+
         }
     }
 

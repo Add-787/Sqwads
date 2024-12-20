@@ -19,8 +19,11 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -48,6 +51,9 @@ fun DefaultTextField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isError: Boolean = false,
+    colors: TextFieldColors = TextFieldDefaults.colors(
+        unfocusedContainerColor = MaterialTheme.colorScheme.background
+    ),
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Next
@@ -66,6 +72,7 @@ fun DefaultTextField(
         trailingIcon = {
 
         },
+        colors = colors,
         enabled = enabled,
         isError = isError,
         keyboardActions = keyboardActions,

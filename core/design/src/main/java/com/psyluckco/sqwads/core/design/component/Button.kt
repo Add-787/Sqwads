@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -47,25 +48,32 @@ import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
 fun DefaultActionButton(
     iconType : IconType,
     @StringRes label : Int? = null,
-    buttonSize: Dp = 100.dp,
+    buttonWidth: Dp = 100.dp,
+    buttonHeight: Dp = 100.dp,
+    colors: ButtonColors = ButtonDefaults.outlinedButtonColors(),
     onClick: () -> Unit,
 ) {
-    OutlinedButton(onClick = onClick, modifier = Modifier.size(buttonSize), shape = RoundedCornerShape(16.dp)) {
+    OutlinedButton(
+        onClick = onClick,
+        modifier = Modifier.width(buttonWidth).height(buttonHeight),
+        shape = RoundedCornerShape(16.dp),
+        colors = colors
+    ) {
         when(iconType) {
             is IconType.Bitmap -> {
                 Image(
                     painter = painterResource(id = iconType.painterId),
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
             is IconType.Vector -> {
                 Image(
                     imageVector = iconType.imageVector,
-                    contentDescription = null
+                    contentDescription = null,
                 )
             }
         }
-        Spacer(Modifier.width(8.dp))
+        Spacer(Modifier.width(2.dp))
         if(label != null) {
             Text(stringResource(label), style = MaterialTheme.typography.titleMedium)
         }

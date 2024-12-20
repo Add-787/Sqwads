@@ -4,7 +4,7 @@ import com.google.firebase.firestore.DocumentId
 import java.time.LocalDateTime
 
 data class Room(
-    @DocumentId val id: String,
+    val id: String,
     val name: String,
     val members: List<String>,
     val createdAt: LocalDateTime,
