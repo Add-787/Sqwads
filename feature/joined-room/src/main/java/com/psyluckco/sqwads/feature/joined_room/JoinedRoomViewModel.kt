@@ -30,6 +30,9 @@ class JoinedRoomViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(JoinedRoomUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
+    val navigationState = _navigationState.asStateFlow()
+
     private var initializeCalled = false
 
     @MainThread
@@ -49,10 +52,11 @@ class JoinedRoomViewModel @Inject constructor(
 
     fun onEvent(event: JoinedRoomEvent) {
         when(event) {
-            JoinedRoomEvent.LeaveRoomClicked -> { }
+            is JoinedRoomEvent.LeaveRoomClicked -> { onLeaveRoomClicked(roomId =  event.roomId) }
             is JoinedRoomEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
         }
     }
+
 
     private suspend fun getRoomInfo(
         id: String
@@ -64,9 +68,20 @@ class JoinedRoomViewModel @Inject constructor(
 
     }
 
+    private fun onLeaveRoomClicked(roomId: String) = launchCatching {
+        roomRepository.leaveRoom(roomId).onSuccess {
+            _navigationState.update { NavigationState.NavigateToHome }
+        }.onFailure {
+            //TODO: display message
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
 
+    }
+
+    fun resetNavigation() {
+        _navigationState.update { NavigationState.None }
     }
 }

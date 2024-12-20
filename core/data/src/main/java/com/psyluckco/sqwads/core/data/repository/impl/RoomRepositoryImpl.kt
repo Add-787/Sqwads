@@ -7,6 +7,7 @@ import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeCreatedException
+import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.di.Dispatcher
 import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
@@ -40,6 +41,14 @@ class RoomRepositoryImpl @Inject constructor(
             println("This error")
             println(it)
         }
+    }
+
+    override suspend fun joinRoom(roomId: String) : Result<Response<Unit>> = runCatching  {
+        roomService.joinRoom(roomId)
+    }
+
+    override suspend fun leaveRoom(roomId: String) : Result<Response<Unit>> = runCatching {
+        roomService.leaveRoom(roomId)
     }
 
 }

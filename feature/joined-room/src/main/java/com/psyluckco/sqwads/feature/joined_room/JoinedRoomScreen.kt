@@ -62,8 +62,22 @@ internal fun JoinedRoomRoute(
     viewModel: JoinedRoomViewModel = hiltViewModel()
 ) {
 
-    LaunchedEffect(key1 = Unit) {
+    val navigationState by viewModel.navigationState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(key1 = navigationState) {
         viewModel.initialize(roomId)
+        fun performNavigation(action: () -> Unit) {
+            action()
+            viewModel.resetNavigation()
+        }
+
+        with(navigationState){
+            when(this){
+                is NavigationState.NavigateToHome -> { performNavigation { popUp() } }
+                else -> Unit
+            }
+        }
+
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -82,6 +96,7 @@ internal fun JoinedRoomRoute(
     )
 
     JoinedRoomScreen(
+        roomId = roomId,
         uiState = uiState,
         popUp = popUp,
         onEvent = onEvent
@@ -98,6 +113,7 @@ internal fun JoinedRoomRoute(
 
 @Composable
 fun JoinedRoomScreen(
+    roomId: String,
     uiState: JoinedRoomUiState,
     popUp: () -> Unit,
     onEvent: (JoinedRoomEvent) -> Unit,
@@ -136,7 +152,7 @@ fun JoinedRoomScreen(
                     contentColor = MaterialTheme.colorScheme.onError
                 )
             ) {
-
+                onEvent(JoinedRoomEvent.LeaveRoomClicked(roomId))
             }
 
         }
@@ -214,8 +230,6 @@ fun GameInfoCard(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onBackground
             )
-
-
         }
 
     }
@@ -296,6 +310,7 @@ private fun JoinedRoomScreenPreview() {
     val fakeMembers = listOf("user1","user2","user3")
     SqwadsTheme {
         JoinedRoomScreen(
+            roomId = "",
             popUp = { },
             onEvent = { },
             uiState = JoinedRoomUiState(
@@ -314,6 +329,7 @@ private fun JoinedRoomScreenDarkPreview() {
 
     SqwadsTheme {
         JoinedRoomScreen(
+            roomId = "",
             popUp = { },
             onEvent = { },
             uiState = JoinedRoomUiState
