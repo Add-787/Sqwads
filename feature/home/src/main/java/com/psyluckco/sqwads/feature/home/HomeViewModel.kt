@@ -60,13 +60,25 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
             HomeEvent.OnEditRoomNameDialogOpened -> _uiState.update { it.copy(isDialogOpened = true) }
             HomeEvent.OnEditRoomNameDialogClosed -> _uiState.update { it.copy(isDialogOpened = false) }
-            is HomeEvent.OnRoomJoining -> { _navigationState.update { NavigationState.NavigateToRoom(event.roomId) } }
+            is HomeEvent.OnRoomJoining -> {
+                onRoomJoining(event.roomId)
+            }
+        }
+    }
+
+    private fun onRoomJoining(roomId: String) = launchCatching {
+        roomRepository.joinRoom(roomId).onSuccess {
+            _navigationState.update { NavigationState.NavigateToRoom(roomId) }
+        }.onFailure {
+            //TODO: show error message
         }
     }
 
     fun resetNavigation() {
         _navigationState.update { NavigationState.None }
     }
+
+
 
     private fun onNewRoomCreated(name: String) = launchCatching {
 
