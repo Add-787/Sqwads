@@ -1,9 +1,11 @@
 package com.psyluckco.firebase.di
 
 import com.psyluckco.firebase.AccountService
+import com.psyluckco.firebase.AnalyticsService
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.firebase.impl.AccountServiceImpl
+import com.psyluckco.firebase.impl.AnalyticsServiceImpl
 import com.psyluckco.firebase.impl.RoomServiceImpl
 import com.psyluckco.firebase.impl.UserDataSource
 import dagger.Binds
@@ -23,5 +25,8 @@ interface ServiceModule {
 
     @Binds
     fun provideUserRepository(impl: UserDataSource): UserRepository
+
+    @Binds
+    fun provideAnalyticsService(impl: AnalyticsServiceImpl): AnalyticsService
 
 }

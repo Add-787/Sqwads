@@ -9,6 +9,7 @@ package com.psyluckco.sqwads.feature.login
 import android.content.Context
 import androidx.compose.ui.platform.LocalContext
 import com.google.android.play.integrity.internal.i
+import com.psyluckco.firebase.AnalyticsService
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
@@ -28,6 +29,7 @@ import com.psyluckco.sqwads.core.design.R.string as Apptext
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
+    private val analyticsService: AnalyticsService,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -71,6 +73,7 @@ class LoginViewModel @Inject constructor(
     private fun onLoginClick() = launchCatching {
         if(!formValidation()) return@launchCatching
 
+        analyticsService.logLoginEvent()
         onEvent(LoginEvent.OnLoadingStateChanged(LoadingState.Loading))
 
         authenticationRepository.signInWithEmailAndPassword(email, password)
