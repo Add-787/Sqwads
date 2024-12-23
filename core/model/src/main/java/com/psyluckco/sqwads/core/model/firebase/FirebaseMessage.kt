@@ -5,8 +5,8 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.Timestamp
 
 data class FirebaseMessage(
-    @DocumentId val id: String,
+    @DocumentId val id: String = "",
     val text: String = "",
-    val sentBy: DocumentReference,
-    val sentAt: Timestamp = Timestamp.now()
+    val sentBy: DocumentReference? = null,
+    val sentAt: Timestamp? = Timestamp.now()
 )

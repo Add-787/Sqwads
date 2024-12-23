@@ -5,7 +5,10 @@ import android.os.Build.VERSION_CODES.P
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
+import com.psyluckco.sqwads.core.model.Exceptions
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseMessageCouldNotBeSentException
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeCreatedException
+import com.psyluckco.sqwads.core.model.Message
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.di.Dispatcher
@@ -13,6 +16,7 @@ import com.psyluckco.sqwads.core.model.di.SqwadsDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import timber.log.Timber
@@ -63,6 +67,35 @@ class RoomRepositoryImpl @Inject constructor(
 
     override suspend fun leaveRoom(roomId: String) : Result<Response<Unit>> = runCatching {
         roomService.leaveRoom(roomId)
+    }
+
+    override suspend fun sendMessage(roomId: String, text: String): Result<String> {
+        try {
+            return roomService.sendMessageInRoom(roomId,text)
+        }catch (e: Exception) {
+            Timber.e(e.message)
+            return Result.failure(FirebaseMessageCouldNotBeSentException())
+        }
+
+    }
+
+    override suspend fun loadAllMessages(roomId: String): Flow<List<Message>> {
+        return roomService.loadAllMessagesInRoom(roomId).map { firebaseMessages ->
+            firebaseMessages
+                .map {
+                    val sentUserId = it.sentBy?.id ?: ""
+
+                    Message(
+                        id = it.id,
+                        text = it.text,
+                        sentAt = it.sentAt?.toDate()?.toInstant()
+                            ?.atZone(ZoneId.systemDefault())
+                            ?.toLocalDateTime(),
+                        fromCurrentUser = sentUserId == userRepository.getLoggedInUser().id,
+                        sentBy = userRepository.getUserInfo(sentUserId).name
+                    )
+                }
+        }
     }
 
 }

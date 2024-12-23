@@ -30,6 +30,9 @@ class JoinedRoomViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(JoinedRoomUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _message = MutableStateFlow("")
+    val message = _message.asStateFlow()
+
     private val _navigationState = MutableStateFlow<NavigationState>(NavigationState.None)
     val navigationState = _navigationState.asStateFlow()
 
@@ -47,13 +50,19 @@ class JoinedRoomViewModel @Inject constructor(
 
         viewModelScope.launch {
             launch { getRoomInfo(id) }
+            launch { getAllRoomMessages(id) }
         }
+    }
+
+    fun onMessageChange(newMessage: String) {
+        _message.update { newMessage }
     }
 
     fun onEvent(event: JoinedRoomEvent) {
         when(event) {
             is JoinedRoomEvent.LeaveRoomClicked -> { onLeaveRoomClicked(roomId =  event.roomId) }
             is JoinedRoomEvent.OnLoadingStateChanged -> _uiState.update { it.copy(loadingState = event.state) }
+            is JoinedRoomEvent.OnMessageSent -> { onMessageSent(id = event.roomId, message = event.message) }
         }
     }
 
@@ -74,6 +83,26 @@ class JoinedRoomViewModel @Inject constructor(
         }.onFailure {
             //TODO: display message
         }
+    }
+
+    private suspend fun getAllRoomMessages(
+        id: String
+    ) {
+        roomRepository.loadAllMessages(id).collectLatest {
+            messages -> _uiState.update { it.copy(messages = messages) }
+        }
+    }
+
+    private fun onMessageSent(
+        id: String,
+        message: String
+    ) = launchCatching {
+        roomRepository.sendMessage(id,message).onSuccess {
+            onMessageChange("")
+        }.onFailure {
+            e -> e.message?.let { SnackbarManager.showMessage(it) }
+        }
+
     }
 
     override fun onCleared() {

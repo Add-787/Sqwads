@@ -14,13 +14,21 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -101,6 +109,8 @@ internal fun JoinedRoomRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val message by viewModel.message.collectAsStateWithLifecycle()
+
 
     /**
      * Uses [rememberUpdatedState] for `onEvent` to prevent unnecessary recompositions by maintaining
@@ -118,6 +128,8 @@ internal fun JoinedRoomRoute(
         roomId = roomId,
         uiState = uiState,
         popUp = popUp,
+        message = message,
+        onMessageChange = viewModel::onMessageChange,
         onEvent = onEvent
     )
 
@@ -133,6 +145,8 @@ internal fun JoinedRoomRoute(
 @Composable
 fun JoinedRoomScreen(
     roomId: String,
+    message: String = "",
+    onMessageChange: (String) -> Unit,
     uiState: JoinedRoomUiState,
     popUp: () -> Unit,
     onEvent: (JoinedRoomEvent) -> Unit,
@@ -156,13 +170,19 @@ fun JoinedRoomScreen(
         ) {
 
             JoinedMembersCard(
+                modifier = Modifier,
                 members = uiState.members
             )
 
             Spacer(modifier = Modifier.height(30.dp))
 
             ConversationCard(
-                messages = uiState.messages
+                modifier = Modifier.fillMaxSize(),
+                roomId = roomId,
+                messages = uiState.messages,
+                sendingMessage = message,
+                onMessageChange = onMessageChange,
+                onEvent = onEvent
             )
 
         }
@@ -172,11 +192,12 @@ fun JoinedRoomScreen(
 
 @Composable
 fun JoinedMembersCard(
+    modifier: Modifier = Modifier,
     members: List<String> = emptyList()
 ) {
 
     Card(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         colors = CardDefaults.cardColors(
@@ -250,12 +271,14 @@ fun JoinedMembersCard(
 @Composable
 fun ConversationCard(
     modifier: Modifier = Modifier,
-    messages: List<Message>
+    roomId: String = "",
+    messages: List<Message>,
+    sendingMessage: String = "",
+    onMessageChange: (String) -> Unit,
+    onEvent: (JoinedRoomEvent) -> Unit
 ) {
-
     Card(
-        modifier = Modifier
-            .fillMaxSize(),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
@@ -267,32 +290,39 @@ fun ConversationCard(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(9.dp),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
+
             MessagesContent(
-                modifier = Modifier.weight(0.8f),
                 messages = messages
             )
 
             Row(
-                modifier = Modifier.height(70.dp),
+                modifier = Modifier
+                    .height(60.dp)
+                    .imePadding(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 DefaultTextField(
-                    modifier = Modifier.weight(0.7f),
-                    value = "",
+                    modifier = Modifier
+                        .width(intrinsicSize = IntrinsicSize.Min),
+                    value = sendingMessage,
                     label = AppText.placeholder,
                     leadingIcon = Icons.Default.MailOutline,
-                    onValueChange = { }
+                    onValueChange = onMessageChange
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { onEvent(JoinedRoomEvent.OnMessageSent(roomId = roomId, message = sendingMessage)) },
                     modifier = Modifier
-                        .fillMaxHeight(0.8f)
+                        .clip(shape = RoundedCornerShape(9.dp))
                         .background(color = MaterialTheme.colorScheme.primary)
+                        .border(
+                            width = 1.dp,
+                            shape = RoundedCornerShape(9.dp),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
                     ,
                 ) {
                     Icon(imageVector = Icons.Default.Send, contentDescription = null)
@@ -309,7 +339,7 @@ fun MessagesContent(
     modifier: Modifier = Modifier,
     messages: List<Message>
 ) {
-    Box(modifier = modifier) {
+    Box(modifier = modifier.fillMaxHeight(0.8f)) {
         LazyColumn {
             items(messages) {
 
@@ -359,7 +389,9 @@ fun ChatBubble(
         horizontalAlignment = Alignment.End
     ) {
         Card(
-            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             colors = if(!message.fromCurrentUser) CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.background
             ) else CardDefaults.cardColors(
@@ -369,13 +401,17 @@ fun ChatBubble(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
         ) {
             Box(modifier = Modifier.padding(8.dp)) {
-                Text(text = message.text, style = MaterialTheme.typography.headlineSmall)
+                Text(text = message.text, style = MaterialTheme.typography.labelLarge)
             }
         }
-        Text(
-            text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
-            style = MaterialTheme.typography.labelSmall
-        )
+
+        if(message.sentAt != null) {
+            Text(
+                text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
+
 
     }
 
@@ -419,7 +455,9 @@ fun JoinedRoomHeader(
     name: String
 ) {
     HeaderWrapper(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .imePadding()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -471,6 +509,7 @@ private fun JoinedRoomScreenPreview() {
             roomId = "",
             popUp = { },
             onEvent = { },
+            onMessageChange = { },
             uiState = JoinedRoomUiState(
                 roomName = "test_room",
                 messages = fakeMessages,
@@ -502,6 +541,7 @@ private fun JoinedRoomScreenDarkPreview() {
             roomId = "",
             popUp = { },
             onEvent = { },
+            onMessageChange = { },
             uiState = JoinedRoomUiState
                 (
                 roomName = "test_room",
