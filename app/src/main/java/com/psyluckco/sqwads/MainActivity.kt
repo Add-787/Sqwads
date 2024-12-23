@@ -38,7 +38,7 @@ class MainActivity : ComponentActivity() {
                 splashScreen.setKeepOnScreenCondition {
                     it == AccountState.Loading
                 }
-                enableEdgeToEdge()
+
                 setContent {
                     SqwadsTheme {
                         SqwadsApp(accountState = it)

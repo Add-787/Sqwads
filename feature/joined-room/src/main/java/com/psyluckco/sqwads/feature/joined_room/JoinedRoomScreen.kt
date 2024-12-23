@@ -159,7 +159,8 @@ fun JoinedRoomScreen(
     ) {
 
         JoinedRoomHeader(
-            popUp = popUp,
+            roomId = roomId,
+            onEvent = onEvent,
             name = uiState.roomName
         )
 
@@ -451,7 +452,8 @@ fun MemberCard(
 
 @Composable
 fun JoinedRoomHeader(
-    popUp: () -> Unit,
+    roomId: String,
+    onEvent: (JoinedRoomEvent) -> Unit,
     name: String
 ) {
     HeaderWrapper(
@@ -463,7 +465,9 @@ fun JoinedRoomHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            IconButton(onClick = popUp) {
+            IconButton(onClick = {
+                onEvent(JoinedRoomEvent.LeaveRoomClicked(roomId))
+            }) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                     tint = MaterialTheme.colorScheme.onBackground,
