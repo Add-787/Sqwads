@@ -9,6 +9,7 @@ package com.psyluckco.sqwads.feature.home
 import androidx.annotation.MainThread
 import androidx.lifecycle.viewModelScope
 import com.psyluckco.firebase.AccountService
+import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.common.BaseViewModel
 import com.psyluckco.sqwads.core.common.LogService
 import com.psyluckco.sqwads.core.common.snackbar.SnackbarManager
@@ -28,6 +29,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
     private val accountService : AccountService,
+    private val userRepository: UserRepository,
     logService: LogService
 ) : BaseViewModel(logService) {
 
@@ -46,8 +48,11 @@ class HomeViewModel @Inject constructor(
             return
         }
         initializeCalled = true
-        _uiState.update { it.copy(userName = accountService.displayName ?: "") }
+
         viewModelScope.launch {
+            launch {
+                _uiState.update { it.copy(userName = userRepository.getLoggedInUser().name) }
+            }
             launch { getAllOpenRooms() }
         }
     }
