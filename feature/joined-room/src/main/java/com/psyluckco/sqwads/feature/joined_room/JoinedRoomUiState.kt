@@ -19,6 +19,7 @@ data class JoinedRoomUiState(
 sealed class JoinedRoomEvent {
     data class OnLoadingStateChanged(val state: LoadingState) : JoinedRoomEvent()
     data class LeaveRoomClicked(val roomId:String) : JoinedRoomEvent()
+    data class OnMessageSent(val roomId: String, val message: String) : JoinedRoomEvent()
 }
 
 sealed interface NavigationState {

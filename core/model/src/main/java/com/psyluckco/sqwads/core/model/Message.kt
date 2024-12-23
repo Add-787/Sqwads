@@ -7,5 +7,5 @@ data class Message(
     val text: String = "",
     val sentBy: String = "",
     val fromCurrentUser: Boolean = false,
-    val sentAt: LocalDateTime = LocalDateTime.now()
+    val sentAt: LocalDateTime? = null
 )

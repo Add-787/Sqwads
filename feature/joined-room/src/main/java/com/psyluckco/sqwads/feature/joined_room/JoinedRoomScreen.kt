@@ -16,14 +16,17 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
@@ -106,6 +109,8 @@ internal fun JoinedRoomRoute(
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val message by viewModel.message.collectAsStateWithLifecycle()
+
 
     /**
      * Uses [rememberUpdatedState] for `onEvent` to prevent unnecessary recompositions by maintaining
@@ -123,6 +128,8 @@ internal fun JoinedRoomRoute(
         roomId = roomId,
         uiState = uiState,
         popUp = popUp,
+        message = message,
+        onMessageChange = viewModel::onMessageChange,
         onEvent = onEvent
     )
 
@@ -138,6 +145,8 @@ internal fun JoinedRoomRoute(
 @Composable
 fun JoinedRoomScreen(
     roomId: String,
+    message: String = "",
+    onMessageChange: (String) -> Unit,
     uiState: JoinedRoomUiState,
     popUp: () -> Unit,
     onEvent: (JoinedRoomEvent) -> Unit,
@@ -169,7 +178,11 @@ fun JoinedRoomScreen(
 
             ConversationCard(
                 modifier = Modifier.fillMaxSize(),
-                messages = uiState.messages
+                roomId = roomId,
+                messages = uiState.messages,
+                sendingMessage = message,
+                onMessageChange = onMessageChange,
+                onEvent = onEvent
             )
 
         }
@@ -258,7 +271,11 @@ fun JoinedMembersCard(
 @Composable
 fun ConversationCard(
     modifier: Modifier = Modifier,
-    messages: List<Message>
+    roomId: String = "",
+    messages: List<Message>,
+    sendingMessage: String = "",
+    onMessageChange: (String) -> Unit,
+    onEvent: (JoinedRoomEvent) -> Unit
 ) {
     Card(
         modifier = modifier,
@@ -273,7 +290,6 @@ fun ConversationCard(
             modifier = modifier
                 .fillMaxWidth()
                 .padding(9.dp),
-            verticalArrangement = Arrangement.SpaceBetween
         ) {
 
             MessagesContent(
@@ -281,23 +297,25 @@ fun ConversationCard(
             )
 
             Row(
-                modifier = Modifier.height(60.dp),
+                modifier = Modifier
+                    .height(60.dp)
+                    .imePadding(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 DefaultTextField(
-                    modifier = Modifier.width(intrinsicSize = IntrinsicSize.Min),
-                    value = "",
+                    modifier = Modifier
+                        .width(intrinsicSize = IntrinsicSize.Min),
+                    value = sendingMessage,
                     label = AppText.placeholder,
                     leadingIcon = Icons.Default.MailOutline,
-                    onValueChange = { }
+                    onValueChange = onMessageChange
                 )
 
                 Spacer(modifier = Modifier.width(12.dp))
 
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { onEvent(JoinedRoomEvent.OnMessageSent(roomId = roomId, message = sendingMessage)) },
                     modifier = Modifier
-                        .fillMaxHeight(0.85f)
                         .clip(shape = RoundedCornerShape(9.dp))
                         .background(color = MaterialTheme.colorScheme.primary)
                         .border(
@@ -321,7 +339,7 @@ fun MessagesContent(
     modifier: Modifier = Modifier,
     messages: List<Message>
 ) {
-    Box(modifier = modifier.fillMaxHeight(0.7f)) {
+    Box(modifier = modifier.fillMaxHeight(0.8f)) {
         LazyColumn {
             items(messages) {
 
@@ -383,13 +401,17 @@ fun ChatBubble(
             border = BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground)
         ) {
             Box(modifier = Modifier.padding(8.dp)) {
-                Text(text = message.text, style = MaterialTheme.typography.headlineSmall)
+                Text(text = message.text, style = MaterialTheme.typography.labelLarge)
             }
         }
-        Text(
-            text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
-            style = MaterialTheme.typography.labelSmall
-        )
+
+        if(message.sentAt != null) {
+            Text(
+                text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
+                style = MaterialTheme.typography.labelSmall
+            )
+        }
+
 
     }
 
@@ -433,7 +455,9 @@ fun JoinedRoomHeader(
     name: String
 ) {
     HeaderWrapper(
-        modifier = Modifier.fillMaxWidth().imePadding()
+        modifier = Modifier
+            .fillMaxWidth()
+            .imePadding()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically
@@ -485,6 +509,7 @@ private fun JoinedRoomScreenPreview() {
             roomId = "",
             popUp = { },
             onEvent = { },
+            onMessageChange = { },
             uiState = JoinedRoomUiState(
                 roomName = "test_room",
                 messages = fakeMessages,
@@ -516,6 +541,7 @@ private fun JoinedRoomScreenDarkPreview() {
             roomId = "",
             popUp = { },
             onEvent = { },
+            onMessageChange = { },
             uiState = JoinedRoomUiState
                 (
                 roomName = "test_room",

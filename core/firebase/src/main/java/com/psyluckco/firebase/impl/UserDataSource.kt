@@ -27,12 +27,18 @@ class UserDataSource @Inject constructor(
 
     override suspend fun saveUser(id: String, username: String, email: String) {
 
-        val newUser = FirebaseUser(
-            name = username,
-            email = email
+//        val newUser = FirebaseUser(
+//            id = id,
+//            name = username,
+//            email = email
+//        )
+
+        val userData = mapOf(
+            "name" to username,
+            "email" to email
         )
 
-        userColRef.document(id).set(newUser).await()
+        userColRef.document(id).set(userData).await()
     }
 
     override suspend fun isUserInDatabase(email: String): Result<Boolean> = runCatching {

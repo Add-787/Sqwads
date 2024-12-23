@@ -22,11 +22,13 @@ import com.psyluckco.firebase.CreateRoomResponse
 import com.psyluckco.firebase.JoinRoomResponse
 import com.psyluckco.firebase.LeaveRoomResponse
 import com.psyluckco.firebase.RoomService
+import com.psyluckco.firebase.SendMessageResponse
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeFoundException
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
+import com.psyluckco.sqwads.core.model.firebase.FirebaseMessage
 import com.psyluckco.sqwads.core.model.firebase.FirebaseRoom
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -97,13 +99,6 @@ class RoomServiceImpl @Inject constructor(
             "isOpened" to true
         )
 
-//        val createdRoom = FirebaseRoom(
-//            name = roomName,
-//            createdBy = user,
-//            createdAt = FieldValue.serverTimestamp(),
-//            members = listOf(user),
-//            isOpened = true
-//        )
         roomsColRef.add(roomData).await().id
     }
 
@@ -131,9 +126,43 @@ class RoomServiceImpl @Inject constructor(
         }
     }
 
+    override suspend fun sendMessageInRoom(roomId: String, text: String): SendMessageResponse = runCatching {
+
+        val user = userRepository.getUserRef()
+
+        val messageData = mapOf(
+            "sentAt" to FieldValue.serverTimestamp(),
+            "sentBy" to user,
+            "text" to text
+        )
+
+        roomsColRef.document(roomId).collection(MESSAGES).add(messageData).await().id
+
+    }
+
+    override suspend fun loadAllMessagesInRoom(roomId: String): Flow<List<FirebaseMessage>> = callbackFlow {
+
+        val messagesQuery = roomsColRef.document(roomId).collection(MESSAGES)
+
+        messagesQuery.addSnapshotListener { value, error ->
+            if(error != null) {
+                return@addSnapshotListener
+            }
+
+            if(value != null && !value.isEmpty) {
+                val messages = value.toObjects(FirebaseMessage::class.java)
+                trySend(messages)
+            } else {
+                trySend(emptyList())
+            }
+        }
+        awaitClose()
+    }
+
     private val roomsColRef by lazy { firestore.collection(ROOMS) }
 
     companion object {
         private const val ROOMS = "rooms"
+        private const val MESSAGES = "messages"
     }
 }

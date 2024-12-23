@@ -6,5 +6,6 @@ object Exceptions {
     class RoomCouldNotBeLoadedException : Exception()
     class FirebaseUserIsNullException : Exception()
     class FirebaseRoomCouldNotBeCreatedException : Exception()
+    class FirebaseMessageCouldNotBeSentException: Exception()
     class FirebaseRoomCouldNotBeFoundException : Exception()
 }
