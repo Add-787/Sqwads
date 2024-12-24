@@ -6,6 +6,7 @@
 
 package com.psyluckco.firebase.impl
 
+import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.logEvent
 import com.psyluckco.firebase.AnalyticsService
@@ -15,9 +16,7 @@ class AnalyticsServiceImpl @Inject constructor(
     private val analytics: FirebaseAnalytics
 ): AnalyticsService {
     override fun logLoginEvent() {
-        analytics.logEvent(FirebaseAnalytics.Event.LOGIN) {
-
-        }
+        analytics.logEvent(FirebaseAnalytics.Event.LOGIN, Bundle())
     }
 
 }
