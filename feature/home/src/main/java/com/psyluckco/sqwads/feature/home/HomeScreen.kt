@@ -390,7 +390,7 @@ fun RoomCard(
             ) {
                 Text(text = room.name, fontSize = 18.sp)
                 Text(
-                    text = DateTimeFormatter.ofPattern("dd MMM yy, hh:MM a").format(room.createdAt),
+                    text = DateTimeFormatter.ofPattern("dd MMM yy, hh:mm a").format(room.createdAt),
                     style = MaterialTheme.typography.labelSmall
                 )
 
