@@ -11,6 +11,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.navigation.compose)
+    implementation(project(":core:firebase"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
