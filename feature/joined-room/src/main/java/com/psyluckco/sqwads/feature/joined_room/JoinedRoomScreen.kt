@@ -150,7 +150,6 @@ fun JoinedRoomScreen(
     uiState: JoinedRoomUiState,
     popUp: () -> Unit,
     onEvent: (JoinedRoomEvent) -> Unit,
-    modifier: Modifier = Modifier
 ) {
     AppWrapper(
         modifier = Modifier.background(
@@ -315,7 +314,11 @@ fun ConversationCard(
                 Spacer(modifier = Modifier.width(12.dp))
 
                 IconButton(
-                    onClick = { onEvent(JoinedRoomEvent.OnMessageSent(roomId = roomId, message = sendingMessage)) },
+                    onClick = {
+                        if(sendingMessage.isNotBlank()){
+                            onEvent(JoinedRoomEvent.OnMessageSent(roomId = roomId, message = sendingMessage))
+                        }
+                              },
                     modifier = Modifier
                         .clip(shape = RoundedCornerShape(9.dp))
                         .background(color = MaterialTheme.colorScheme.primary)
@@ -342,7 +345,8 @@ fun MessagesContent(
 ) {
     Box(modifier = modifier.fillMaxHeight(0.8f)) {
         LazyColumn {
-            items(messages) {
+            val sortedMessages = messages.sortedBy { it.sentAt }
+            items(sortedMessages) {
 
                 if(it.fromCurrentUser) {
                     Row(
@@ -408,7 +412,7 @@ fun ChatBubble(
 
         if(message.sentAt != null) {
             Text(
-                text = DateTimeFormatter.ofPattern("hh:MM a").format(message.sentAt),
+                text = DateTimeFormatter.ofPattern("hh:mm a").format(message.sentAt),
                 style = MaterialTheme.typography.labelSmall
             )
         }
