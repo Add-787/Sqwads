@@ -23,6 +23,7 @@ import com.psyluckco.sqwads.feature.login.loginScreen
 import com.psyluckco.sqwads.feature.login.navigateToLogin
 import com.psyluckco.sqwads.feature.profile.navigateToProfile
 import com.psyluckco.sqwads.feature.profile.profileScreen
+import com.psyluckco.sqwads.feature.stats.statsScreen
 
 @Composable
 fun SqwadsNavHost(
@@ -65,6 +66,11 @@ fun SqwadsNavHost(
         profileScreen(
             popup = navHostController::popBackStack,
         )
+
+        statsScreen(
+            popup = navHostController::popBackStack
+        )
+
     }
 
 }
