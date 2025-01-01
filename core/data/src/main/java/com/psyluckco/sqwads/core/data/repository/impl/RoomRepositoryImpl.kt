@@ -40,7 +40,8 @@ class RoomRepositoryImpl @Inject constructor(
                     .atZone(ZoneId.systemDefault())
                     .toLocalDateTime(),
                 createdBy = userRepository.getUserInfo(admin).name,
-                members = members
+                members = members,
+                score = it.score
             )
 
         }

@@ -96,6 +96,7 @@ class RoomServiceImpl @Inject constructor(
             "createdBy" to user,
             "createdAt" to FieldValue.serverTimestamp(),
             "members" to listOf(user),
+            "score" to 0.0,
             "isOpened" to true
         )
 

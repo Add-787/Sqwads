@@ -85,20 +85,33 @@ exports.onMessageUpdate = onDocumentCreated('rooms/{roomId}/messages/{messageId}
                 };
 
                 // Call the Natural Language API
-                logger.info("Calling api", {structuredData: true});
+                logger.info("Calling api for room id:"+roomId, {structuredData: true});
                 const [result] = await languageClient.analyzeSentiment({ document });
 
                 // Extract sentiment data
                 const sentiment = result.documentSentiment;
 
-                const roomSnapshot = db.collection('rooms/${roomId}').get();
-                const messagesRef = db.collection('rooms/${roomId}/messages');
+                const roomRef = db.doc(`rooms/${roomId}`);
+                const roomSnapshot = await roomRef.get();
+                const messageSnapshot = await db.collection(`rooms/${roomId}/messages`).get();
 
-                const oldScore = roomSnapshot.data()['score']
+                if(!roomSnapshot.exists) {
+                    logger.error("Could not find document:");
+                    return;
+                }
 
-                const noOfMessages = messagesRef.count();
+                const oldScore = roomSnapshot.get('score');
 
-                const newAverage = (noOfMessages * oldScore) + sentiment.score / noOfMessages + 1;
+                logger.info("Old score:"+oldScore);
+                logger.info("New sentiment score:"+sentiment.score);
+
+                const noOfMessages = await messageSnapshot.size;
+
+                logger.info("No of messages:"+noOfMessages);
+
+                var newAverage = ((noOfMessages - 1) * oldScore) + sentiment.score / noOfMessages;
+
+                logger.info("Calculated new average:"+newAverage);
 
                 await roomRef.update({
                     score: newAverage

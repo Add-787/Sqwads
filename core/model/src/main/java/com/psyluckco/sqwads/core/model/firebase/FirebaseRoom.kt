@@ -15,6 +15,7 @@ data class FirebaseRoom(
     val createdBy: DocumentReference? = null,
     val createdAt: Timestamp = Timestamp.now(),
     val members: List<DocumentReference> = emptyList(),
+    val score: Double = 0.0,
     val isOpened: Boolean = true
 ) {
 
@@ -27,6 +28,7 @@ data class FirebaseRoom(
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime(),
             createdBy = createdBy?.id,
+            score = score
         )
     }
 

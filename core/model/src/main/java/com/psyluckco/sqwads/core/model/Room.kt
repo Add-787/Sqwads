@@ -8,5 +8,6 @@ data class Room(
     val name: String,
     val members: List<String>,
     val createdAt: LocalDateTime,
-    val createdBy: String?
+    val createdBy: String?,
+    val score: Double = 0.0
 )
