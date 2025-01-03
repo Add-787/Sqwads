@@ -30,4 +30,5 @@
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
     <string name="logout_btn_label">Logout</string>
+    <string name="stats_header">Statistics</string>
 </resources>
