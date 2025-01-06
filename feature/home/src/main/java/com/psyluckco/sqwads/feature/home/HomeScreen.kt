@@ -1,6 +1,8 @@
 package com.psyluckco.sqwads.feature.home
 
 import android.content.res.Configuration
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,13 +24,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -59,6 +64,7 @@ internal fun HomeRoute(
     userId: String,
     navigateToRoom: (String) -> Unit,
     navigateToProfile: () -> Unit,
+    navigateToStats: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
@@ -81,6 +87,7 @@ internal fun HomeRoute(
                 NavigationState.NavigateToProfile -> performNavigation { navigateToProfile() }
                 is NavigationState.NavigateToRoom -> performNavigation { navigateToRoom(this.roomId) }
                 NavigationState.None -> Unit
+                NavigationState.NavigateToStats -> performNavigation { navigateToStats() }
             }
         }
 
@@ -122,9 +129,12 @@ fun HomeScreen(
             onEvent = onEvent,
         )
 
-        CreateNewRoomCard(
+        OptionsCard(
             creatingNewRoom = {
                 onEvent(HomeEvent.OnEditRoomNameDialogOpened)
+            },
+            getUserStats = {
+                onEvent(HomeEvent.OnUserStatsClicked)
             }
         )
 
@@ -198,6 +208,7 @@ fun HomeHeader(
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showBackground = true)
 fun HomeScreenPreview() {
@@ -237,6 +248,7 @@ fun HomeScreenPreview() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun HomeScreenDarkPreview() {
@@ -277,15 +289,15 @@ private fun HomeScreenDarkPreview() {
 }
 
 @Composable
-private fun CreateNewRoomCard(
+private fun OptionsCard(
     modifier: Modifier = Modifier,
     creatingNewRoom: () -> Unit,
+    getUserStats: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .height(120.dp)
-            .fillMaxWidth()
-            .clickable { creatingNewRoom() },
+            .fillMaxWidth(),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
         ),
@@ -303,15 +315,34 @@ private fun CreateNewRoomCard(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
+                    .clickable { getUserStats() },
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Icon(
+                    imageVector = Icons.Filled.Info,
+                    contentDescription = null,
+                    modifier = Modifier.size(75.dp)
+                )
+                Text(text = stringResource(id = AppText.get_user_stats_text))
+            }
+
+            VerticalDivider()
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+                    .clickable { creatingNewRoom() },
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Icon(
+                    imageVector = Icons.Default.AddCircle,
+                    contentDescription = null,
+                    modifier = Modifier.size(75.dp)
+                )
                 Text(text = stringResource(id = AppText.create_room_button_text))
             }
 
-            Icon(
-                imageVector = Icons.Default.AddCircle,
-                contentDescription = null,
-                modifier = Modifier.size(90.dp)
-            )
         }
 
     }
@@ -388,10 +419,11 @@ fun RoomCard(
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
-                Text(text = room.name, fontSize = 18.sp)
+                Text(text = room.name, fontSize = 18.sp, color = MaterialTheme.colorScheme.onBackground)
                 Text(
                     text = DateTimeFormatter.ofPattern("dd MMM yy, hh:mm a").format(room.createdAt),
-                    style = MaterialTheme.typography.labelSmall
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onBackground
                 )
 
             }

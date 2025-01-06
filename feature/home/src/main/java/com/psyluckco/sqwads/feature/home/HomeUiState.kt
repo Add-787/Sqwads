@@ -13,6 +13,7 @@ data class HomeUiState(
 
 sealed class HomeEvent {
     data object OnProfileClicked : HomeEvent()
+    data object OnUserStatsClicked: HomeEvent()
     data class OnRoomCreated(val roomId : String) : HomeEvent()
     data class OnRoomJoining(val roomId: String) : HomeEvent()
     data class OnLoadingStateChanged(val state: LoadingState) : HomeEvent()
@@ -25,4 +26,5 @@ sealed interface NavigationState {
     data object None : NavigationState
     data class NavigateToRoom(val roomId : String) : NavigationState
     data object NavigateToProfile : NavigationState
+    data object NavigateToStats : NavigationState
 }

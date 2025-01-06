@@ -1,10 +1,12 @@
 package com.psyluckco.firebase
 
-import com.psyluckco.sqwads.core.model.Message
-import com.psyluckco.sqwads.core.model.Response
+import com.psyluckco.sqwads.core.model.firebase.FirebaseMessage
+import kotlinx.coroutines.flow.Flow
 
-typealias GetMessagesResponse = Response<List<Message>>
+typealias GetAllMessagesResponse = Flow<List<FirebaseMessage>>
+
 interface MessageService {
 
-    suspend fun loadAllMessagesofUser(userId: String)
+    suspend fun loadAllMessages() : GetAllMessagesResponse
+
 }

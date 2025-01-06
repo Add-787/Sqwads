@@ -110,12 +110,12 @@ exports.onMessageUpdate = onDocumentCreated('rooms/{roomId}/messages/{messageId}
 
                 logger.info("No of messages:"+noOfMessages);
 
-                var newAverage = ((noOfMessages - 1) * oldScore) + sentiment.score / noOfMessages;
+                var newAverage = (((noOfMessages - 1) * oldScore) + sentiment.score) / noOfMessages;
 
                 logger.info("Calculated new average:"+newAverage);
 
                 await messageRef.update({
-                    score: sentiment
+                    score: sentiment.score
                 })
 
                 await roomRef.update({

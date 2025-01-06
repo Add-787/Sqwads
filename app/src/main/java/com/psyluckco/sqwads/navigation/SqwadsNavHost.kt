@@ -23,6 +23,7 @@ import com.psyluckco.sqwads.feature.login.loginScreen
 import com.psyluckco.sqwads.feature.login.navigateToLogin
 import com.psyluckco.sqwads.feature.profile.navigateToProfile
 import com.psyluckco.sqwads.feature.profile.profileScreen
+import com.psyluckco.sqwads.feature.stats.navigateToStats
 import com.psyluckco.sqwads.feature.stats.statsScreen
 
 @Composable
@@ -48,7 +49,8 @@ fun SqwadsNavHost(
 
         homeScreen(
             navigateToProfile = navHostController::navigateToProfile,
-            navigateToRoom = navHostController::navigateToJoinedRoom
+            navigateToRoom = navHostController::navigateToJoinedRoom,
+            navigateToStats = navHostController::navigateToStats
         )
 
         joinedRoomScreen(

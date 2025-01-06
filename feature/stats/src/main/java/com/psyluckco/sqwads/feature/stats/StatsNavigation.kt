@@ -10,7 +10,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import kotlinx.serialization.Serializable
 
+@Serializable
 data object Stats
 
 fun NavController.navigateToStats(
@@ -23,7 +25,7 @@ fun NavGraphBuilder.statsScreen(
     popup: () -> Unit
 ) {
     composable<Stats> {
-
+        StatsRoute(popUp = popup)
     }
 }
 

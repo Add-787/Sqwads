@@ -40,6 +40,7 @@ dependencies {
     implementation(projects.feature.forgotPassword)
     implementation(projects.feature.joinedRoom)
     implementation(projects.feature.stats)
+    implementation(projects.feature.profile)
 
     implementation(projects.core.firebase)
     implementation(projects.core.design)

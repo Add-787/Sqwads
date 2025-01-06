@@ -14,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ListenSource
 import com.google.firebase.firestore.MetadataChanges
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.SnapshotListenOptions
 import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.toObject
@@ -21,11 +22,13 @@ import com.google.firebase.firestore.toObjects
 import com.psyluckco.firebase.CreateRoomResponse
 import com.psyluckco.firebase.JoinRoomResponse
 import com.psyluckco.firebase.LeaveRoomResponse
+import com.psyluckco.firebase.RecommendedRoomsResponse
 import com.psyluckco.firebase.RoomService
 import com.psyluckco.firebase.SendMessageResponse
 import com.psyluckco.firebase.UserRepository
 import com.psyluckco.sqwads.core.model.Exceptions
 import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomCouldNotBeFoundException
+import com.psyluckco.sqwads.core.model.Exceptions.FirebaseRoomsCouldNotBeLoadedException
 import com.psyluckco.sqwads.core.model.Response
 import com.psyluckco.sqwads.core.model.Room
 import com.psyluckco.sqwads.core.model.firebase.FirebaseMessage
@@ -64,6 +67,33 @@ class RoomServiceImpl @Inject constructor(
         }
 
         awaitClose()
+    }
+
+    override suspend fun loadRecommendedRooms(): RecommendedRoomsResponse = callbackFlow {
+
+        trySend(Response.Loading)
+
+        val recommendedRoomsQuery = roomsColRef
+            .whereEqualTo("isOpened", true)
+            .orderBy("score", Query.Direction.DESCENDING)
+
+        recommendedRoomsQuery.addSnapshotListener {
+            values, error ->
+                if(error != null) {
+                    trySend(Response.Failure(FirebaseRoomsCouldNotBeLoadedException()))
+                    return@addSnapshotListener
+                }
+
+                if(values != null && !values.isEmpty) {
+                    val rooms = values.toObjects(FirebaseRoom::class.java)
+                    trySend(Response.Success(rooms.toList()))
+                } else {
+                    trySend(Response.Success(emptyList()))
+                }
+        }
+
+        awaitClose()
+
     }
 
     override suspend fun loadRoomData(roomId: String): Flow<FirebaseRoom?> = callbackFlow {

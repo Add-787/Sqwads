@@ -7,9 +7,12 @@
 package com.psyluckco.sqwads.feature.stats
 
 import com.psyluckco.sqwads.core.model.LoadingState
+import com.psyluckco.sqwads.core.model.Room
 
 data class StatsUiState(
-    val loadingState: LoadingState = LoadingState.Idle
+    val loadingState: LoadingState = LoadingState.Idle,
+    val recommendedRooms: List<Room> = emptyList(),
+    val sentimentScores: List<Double> = emptyList()
 )
 
 sealed class StatsEvent {

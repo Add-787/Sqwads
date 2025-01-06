@@ -12,11 +12,12 @@ typealias CreateRoomResponse = Result<String>
 typealias SendMessageResponse = Result<String>
 typealias JoinRoomResponse = Response<Unit>
 typealias LeaveRoomResponse = Response<Unit>
-typealias RecommendedRoomsResponse = Response<List<Room>>
+typealias RecommendedRoomsResponse = Flow<Response<List<FirebaseRoom>>>
 
 interface RoomService {
 
     suspend fun loadAllOpenRooms() : Flow<List<FirebaseRoom>>
+    suspend fun loadRecommendedRooms() : RecommendedRoomsResponse
     suspend fun loadRoomData(roomId: String) : Flow<FirebaseRoom?>
     suspend fun createNewRoom(roomName: String) : CreateRoomResponse
     suspend fun joinRoom(roomId: String) : JoinRoomResponse
