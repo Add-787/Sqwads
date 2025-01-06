@@ -7,6 +7,7 @@
 package com.psyluckco.sqwads.feature.stats
 
 import android.content.res.Configuration
+import android.graphics.Color.toArgb
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,26 +37,22 @@ import com.patrykandpatrick.vico.compose.chart.Chart
 import com.patrykandpatrick.vico.compose.chart.line.lineChart
 import com.patrykandpatrick.vico.compose.component.lineComponent
 import com.patrykandpatrick.vico.compose.component.shape.shader.fromBrush
-import com.patrykandpatrick.vico.compose.style.ChartStyle
-import com.patrykandpatrick.vico.compose.style.LocalChartStyle
-import com.patrykandpatrick.vico.compose.style.ProvideChartStyle
 import com.patrykandpatrick.vico.compose.style.currentChartStyle
 import com.patrykandpatrick.vico.core.chart.copy
 import com.patrykandpatrick.vico.core.chart.decoration.ThresholdLine
 import com.patrykandpatrick.vico.core.chart.layout.HorizontalLayout
 import com.patrykandpatrick.vico.core.chart.line.LineChart
-import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShader
 import com.patrykandpatrick.vico.core.component.shape.shader.DynamicShaders
-import com.patrykandpatrick.vico.core.context.DrawContext
-import com.patrykandpatrick.vico.core.entry.ChartEntry
+import com.patrykandpatrick.vico.core.entry.ChartEntryModel
 import com.patrykandpatrick.vico.core.entry.ChartEntryModelProducer
-import com.patrykandpatrick.vico.core.entry.ChartModelProducer
-import com.patrykandpatrick.vico.core.entry.entriesOf
 import com.patrykandpatrick.vico.core.entry.entryModelOf
+import com.patrykandpatrick.vico.core.entry.entryOf
+import com.patrykandpatrick.vico.core.extension.getFieldValue
 import com.psyluckco.sqwads.core.design.R
 import com.psyluckco.sqwads.core.design.component.AppWrapper
 import com.psyluckco.sqwads.core.design.component.HeaderWrapper
 import com.psyluckco.sqwads.core.design.theme.SqwadsTheme
+import kotlin.random.Random
 
 @Composable
 internal fun StatsRoute(
@@ -90,7 +87,7 @@ fun StatsScreen(
 
 @Composable
 fun UserSentimentGraph(
-    scores: List<Double> = listOf(0.8,-0.1,0.5, 0.9, 0.4, -0.2, 0.6),
+    scores: List<Double> = listOf(0.25, -0.45, 0.32, 0.75),
     modifier: Modifier = Modifier
 ) {
     Box(modifier = modifier
@@ -99,34 +96,41 @@ fun UserSentimentGraph(
         .padding(all = 8.dp)
     ) {
 
+        val floatEntries = scores.mapIndexed { index, d ->
+            entryOf(index,d)
+        }
+
+        val lineSpecs = scores.map { s ->
+            LineChart.LineSpec(
+                lineColor = if (s < 0.0) MaterialTheme.colorScheme.error.toArgb() else MaterialTheme.colorScheme.primary.toArgb(),
+                lineBackgroundShader = DynamicShaders.fromBrush(
+                    verticalGradient(
+                        listOf(
+                            if (s < 0.0) MaterialTheme.colorScheme.error.copy(0.5f) else MaterialTheme.colorScheme.primary.copy(
+                                0.5f
+                            ),
+                            if (s < 0.0) MaterialTheme.colorScheme.error.copy(0f) else MaterialTheme.colorScheme.primary.copy(
+                                0f
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
         val threshold = lineComponent()
 
-//        val lineSpec = LineChart.LineSpec(
-//            lineColor =
-//        )
+
         Chart(
             chart = lineChart(
-                lines = currentChartStyle.lineChart.lines.map {
-                    lineSpec ->  lineSpec.copy(
-                        lineColor = MaterialTheme.colorScheme.primary.toArgb(),
-                        lineBackgroundShader = DynamicShaders.fromBrush(
-                            verticalGradient(
-                                listOf(
-                                    MaterialTheme.colorScheme.primary.copy(0.5f),
-                                    MaterialTheme.colorScheme.primary.copy(0f)
-                                )
-                            )
-                        ),
-
-                    )
-                },
+                lines = lineSpecs,
                 decorations = listOf(
                     ThresholdLine(
                     0f
                     )
                 )
             ),
-            model = entryModelOf(0.4, 0.2, -0.3, 0.5),
+            chartModelProducer = ChartEntryModelProducer(floatEntries),
             startAxis = rememberStartAxis(
                 guideline = null,
             ),
@@ -140,6 +144,8 @@ fun UserSentimentGraph(
     }
     
 }
+
+fun getRandomEntries() = List(4) { entryOf(it, Random.nextFloat() * 16f) }
 
 @Composable
 fun StatsHeader(modifier: Modifier = Modifier) {

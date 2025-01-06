@@ -12,6 +12,7 @@ typealias CreateRoomResponse = Result<String>
 typealias SendMessageResponse = Result<String>
 typealias JoinRoomResponse = Response<Unit>
 typealias LeaveRoomResponse = Response<Unit>
+typealias RecommendedRoomsResponse = Response<List<Room>>
 
 interface RoomService {
 
