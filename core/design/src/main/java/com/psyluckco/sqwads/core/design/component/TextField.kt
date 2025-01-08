@@ -52,7 +52,8 @@ fun DefaultTextField(
     enabled: Boolean = true,
     isError: Boolean = false,
     colors: TextFieldColors = TextFieldDefaults.colors(
-        unfocusedContainerColor = MaterialTheme.colorScheme.background
+        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+        focusedContainerColor =  MaterialTheme.colorScheme.background
     ),
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(
@@ -90,6 +91,10 @@ fun DefaultPasswordField(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isError: Boolean = false,
+    colors: TextFieldColors = TextFieldDefaults.colors(
+        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+        focusedContainerColor =  MaterialTheme.colorScheme.background
+    ),
     keyboardActions: KeyboardActions = KeyboardActions(),
     keyboardOptions: KeyboardOptions = KeyboardOptions(
         imeAction = ImeAction.Next,

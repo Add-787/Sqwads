@@ -92,6 +92,7 @@ exports.onMessageUpdate = onDocumentCreated('rooms/{roomId}/messages/{messageId}
                 const sentiment = result.documentSentiment;
 
                 const roomRef = db.doc(`rooms/${roomId}`);
+                const messageRef = db.doc(`rooms/${roomId}/messages/${messageId}`);
                 const roomSnapshot = await roomRef.get();
                 const messageSnapshot = await db.collection(`rooms/${roomId}/messages`).get();
 
@@ -109,9 +110,13 @@ exports.onMessageUpdate = onDocumentCreated('rooms/{roomId}/messages/{messageId}
 
                 logger.info("No of messages:"+noOfMessages);
 
-                var newAverage = ((noOfMessages - 1) * oldScore) + sentiment.score / noOfMessages;
+                var newAverage = (((noOfMessages - 1) * oldScore) + sentiment.score) / noOfMessages;
 
                 logger.info("Calculated new average:"+newAverage);
+
+                await messageRef.update({
+                    score: sentiment.score
+                })
 
                 await roomRef.update({
                     score: newAverage

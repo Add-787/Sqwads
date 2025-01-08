@@ -68,6 +68,8 @@ class HomeViewModel @Inject constructor(
             is HomeEvent.OnRoomJoining -> {
                 onRoomJoining(event.roomId)
             }
+
+            HomeEvent.OnUserStatsClicked -> { _navigationState.update { NavigationState.NavigateToStats }}
         }
     }
 
