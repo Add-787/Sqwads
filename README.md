@@ -1,7 +1,4 @@
-
-#<div align="center">
-![App Icon](https://github.com/Add-787/Sqwads/blob/main/readme_assets/app_icon.png) Sqwads
-</div>
+# Sqwads ![App Icon](https://github.com/Add-787/Sqwads/blob/main/readme_assets/app_icon.png) 
 
 An application developed to showcase the usage of Firebase features by developing a chat application allowing you to make rooms and join rooms by evaluating sentiment of the chats in the room.
 
@@ -11,7 +8,7 @@ You can get started on developing this application by following a few steps:
 2. Add this project on your firebase account.
 3. Download the google-services.json file and add it to the app module.
 
-## Setup and Configuration Guide
+## Features
 You can get started on developing this application by following a few steps:
 1. Clone this repository
 2. Add this project on your firebase account.
