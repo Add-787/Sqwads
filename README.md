@@ -4,12 +4,26 @@ An application developed to showcase the usage of Firebase features by developin
 
 ## Setup and Configuration Guide
 You can get started on developing this application by following a few steps:
-1. Clone this repository
-2. Add this project on your firebase account.
-3. Download the google-services.json file and add it to the app module.
+- Clone this repository
+- Add this project on your firebase account.
+- Download the google-services.json file and add it to the app module.
 
 ## Features
-You can get started on developing this application by following a few steps:
-1. Clone this repository
-2. Add this project on your firebase account.
-3. Download the google-services.json file and add it to the app module.
+- [User Auth] (#user-auth)
+- [Creating and joining rooms]
+- [Analysing chats and recommendations]
+
+## User Auth
+<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" align="right">
+- Basic authentication implementation with email & password.
+- Authentication with Google sign in.
+
+## Creating and joining rooms
+![Dowload the demo video](https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/IMG_3513.mp4)
+- See realtime, rooms getting created.
+- Join any existing rooms or create one yourself.
+
+## Sentiment Analysis of chats
+<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/user_stats.gif" align="right">
+- Find rooms with positive scores to join.
+- Scores are calculated by taking an average of sentiment scores given to individual messages.
