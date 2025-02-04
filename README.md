@@ -14,11 +14,9 @@ You can get started on developing this application by following a few steps:
 - [Analysing chats and recommendations]
 
 ## User Auth
-<div>
 <img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" width="320">
 - Basic authentication implementation with email & password.
 - Authentication with Google sign in.
-</div>
 
 
 ## Creating and joining rooms
