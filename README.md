@@ -17,10 +17,8 @@ You can get started on developing this application by following a few steps:
 <div align="center">
 <img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" width="320" height="600">
 </div>
-<li>
-Basic authentication implementation with email & password.<br>
-Authentication with Google sign in.<br>
-</li>
+<li> Basic authentication implementation with email & password </li>
+<li> Authentication with Google sign in.</li>
 
 
 
@@ -33,6 +31,5 @@ Authentication with Google sign in.<br>
 <div align="center">
 <img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/user_stats.gif" width="320" height="600">
 </div>
-
-- Find rooms with positive scores to join.
-- Scores are calculated by taking an average of sentiment scores given to individual messages.  
+<li>Find rooms with positive scores to join.</li>
+<li>Scores are calculated by taking an average of sentiment scores given to individual messages.  </li>
