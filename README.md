@@ -14,7 +14,7 @@ You can get started on developing this application by following a few steps:
 - [Analysing chats and recommendations]
 
 ## User Auth
-<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" align="right">
+<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" width="320" align="right">
 - Basic authentication implementation with email & password.
 - Authentication with Google sign in.
 
@@ -24,6 +24,6 @@ You can get started on developing this application by following a few steps:
 - Join any existing rooms or create one yourself.
 
 ## Sentiment Analysis of chats
-<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/user_stats.gif" align="right">
+<img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/user_stats.gif" width="320" align="right">
 - Find rooms with positive scores to join.
 - Scores are calculated by taking an average of sentiment scores given to individual messages.
