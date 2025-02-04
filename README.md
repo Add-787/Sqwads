@@ -1,4 +1,4 @@
-# <h1 align="center">Sqwads <img src="https://github.com/Add-787/Sqwads/blob/main/readme_assets/app_icon.png" height="40" width="40"></h1> 
+# <h1 text-align="ceter">Sqwads <img src="https://github.com/Add-787/Sqwads/blob/main/readme_assets/app_icon.png" height="40" width="40"></h1> 
 
 An application developed to showcase the usage of Firebase features by developing a chat application allowing you to make rooms and join rooms by evaluating sentiment of the chats in the room.
 
