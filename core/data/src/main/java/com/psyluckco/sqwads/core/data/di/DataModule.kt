@@ -7,8 +7,10 @@
 package com.psyluckco.sqwads.core.data.di
 
 import com.psyluckco.sqwads.core.data.repository.AuthenticationRepository
+import com.psyluckco.sqwads.core.data.repository.MessageRepository
 import com.psyluckco.sqwads.core.data.repository.RoomRepository
 import com.psyluckco.sqwads.core.data.repository.impl.AuthenticationRepositoryImpl
+import com.psyluckco.sqwads.core.data.repository.impl.MessageRepositoryImpl
 import com.psyluckco.sqwads.core.data.repository.impl.RoomRepositoryImpl
 import dagger.Binds
 import dagger.Module
@@ -18,6 +20,9 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 interface DataModule {
+
+    @Binds
+    fun provideMessageRepo(impl: MessageRepositoryImpl): MessageRepository
 
     @Binds
     fun provideAuthenticationRepo(impl: AuthenticationRepositoryImpl): AuthenticationRepository

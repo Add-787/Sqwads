@@ -25,7 +25,8 @@ fun NavController.navigateToHome(
 
 fun NavGraphBuilder.homeScreen(
     navigateToRoom: (String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToStats: () -> Unit
 ) {
 
     composable<Home> {
@@ -34,7 +35,8 @@ fun NavGraphBuilder.homeScreen(
         HomeRoute(
             userId = homePage.id,
             navigateToRoom = navigateToRoom,
-            navigateToProfile = navigateToProfile
+            navigateToProfile = navigateToProfile,
+            navigateToStats = navigateToStats
         )
     }
 }

@@ -16,7 +16,7 @@
     <string name="back_to_login_button">Login</string>
     <string name="password_recovery_button">Recover</string>
     <string name="placeholder_section_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit,</string>
-    <string name="create_room_button_text">Create new room</string>
+    <string name="create_room_button_text">Create New Room</string>
     <string name="join_rooms_section_header">Join Rooms</string>
     <string name="joined_members_card_header">Joined Members</string>
     <string name="leave_room_button">Leave Room</string>
@@ -30,4 +30,9 @@
     <string name="email_label">Email</string>
     <string name="password_label">Password</string>
     <string name="logout_btn_label">Logout</string>
+    <string name="stats_header">Statistics</string>
+    <string name="get_user_stats_text">Get User Statistics</string>
+    <string name="recommended_rooms_section_header">Recommended Rooms</string>
+    <string name="stats_screen_loading_dialog">Loading User Stats</string>
+    <string name="current_mood_graph_header">Your Current Mood</string>
 </resources>

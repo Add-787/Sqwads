@@ -39,6 +39,8 @@ dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.forgotPassword)
     implementation(projects.feature.joinedRoom)
+    implementation(projects.feature.stats)
+    implementation(projects.feature.profile)
 
     implementation(projects.core.firebase)
     implementation(projects.core.design)
@@ -48,7 +50,6 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.firebase.auth)
-    implementation(project(":feature:profile"))
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

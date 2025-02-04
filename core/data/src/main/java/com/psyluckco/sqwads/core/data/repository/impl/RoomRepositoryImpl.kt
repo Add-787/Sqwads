@@ -62,6 +62,29 @@ class RoomRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getRecommendedRooms(): Flow<List<Room>> {
+        return roomService.loadRecommendedRooms().map {
+            if(it is Response.Success) {
+                val transformed = it.data.map {
+                    fr -> Room(
+                    id = fr.id,
+                    name = fr.name,
+                    createdAt = fr.createdAt.toDate().toInstant()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDateTime(),
+                    createdBy = "",
+                    members = emptyList(),
+                    score = fr.score
+                    )
+                }
+
+                return@map transformed
+            } else {
+                return@map emptyList()
+            }
+        }
+    }
+
     override suspend fun joinRoom(roomId: String) : Result<Response<Unit>> = runCatching  {
         roomService.joinRoom(roomId)
     }

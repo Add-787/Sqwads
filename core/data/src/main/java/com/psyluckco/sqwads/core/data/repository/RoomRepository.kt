@@ -10,6 +10,7 @@ interface RoomRepository {
     suspend fun getRoom(roomId: String) : Flow<Room>
     suspend fun createNewRoom(roomName: String) : Result<String>
     suspend fun getAllOpenRooms() : Flow<List<Room>>
+    suspend fun getRecommendedRooms(): Flow<List<Room>>
     suspend fun joinRoom(roomId: String)  : Result<Response<Unit>>
     suspend fun leaveRoom(roomId: String) : Result<Response<Unit>>
     suspend fun sendMessage(roomId: String, text: String) : Result<String>
