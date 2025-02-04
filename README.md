@@ -18,8 +18,8 @@ You can get started on developing this application by following a few steps:
 <img src="https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/login_see.gif" width="320">
 </div>
 ##
-- Basic authentication implementation with email & password.
-- Authentication with Google sign in.
+- Basic authentication implementation with email & password.<br>
+- Authentication with Google sign in.<br>
 
 
 ## Creating and joining rooms
