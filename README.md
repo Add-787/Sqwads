@@ -9,9 +9,9 @@ You can get started on developing this application by following a few steps:
 - Download the google-services.json file and add it to the app module.
 
 ## Features
-- [User Auth] (#user-auth)
-- [Creating and joining rooms](#sentiment-analysis-of-chats)
-- [Analysing chats and recommendations]
+- [User Auth](#user-auth)
+- [Creating and joining rooms](#creating-and-joining-rooms)
+- [Analysing chats and recommendations](#sentiment-analysis-of-chats)
 
 ## User Auth
 <div align="center">
