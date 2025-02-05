@@ -10,7 +10,7 @@ You can get started on developing this application by following a few steps:
 
 ## Features
 - [User Auth] (#user-auth)
-- [Creating and joining rooms]
+- [Creating and joining rooms](#sentiment-analysis-of-chats)
 - [Analysing chats and recommendations]
 
 ## User Auth
