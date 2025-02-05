@@ -23,7 +23,7 @@ You can get started on developing this application by following a few steps:
 
 
 ## Creating and joining rooms
-![Download the demo video](https://github.com/Add-787/Sqwads/blob/v1.0.0/readme_assets/IMG_3513.mp4)
+![Chat_screen](https://github.com/Add-787/Sqwads/blob/main/readme_assets/chat_image.jpg)
 - See realtime, rooms getting created.
 - Join any existing rooms or create one yourself.
 
