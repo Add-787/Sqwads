@@ -23,9 +23,11 @@ You can get started on developing this application by following a few steps:
 
 
 ## Creating and joining rooms
-![Chat_screen](https://github.com/Add-787/Sqwads/blob/main/readme_assets/chat_image.jpg)
-- See realtime, rooms getting created.
-- Join any existing rooms or create one yourself.
+<div align="center">
+<img src="https://github.com/Add-787/Sqwads/blob/main/readme_assets/chat_image.jpg" width="320" height="600">
+</div>
+<li> See realtime, rooms getting created. </li>
+<li> Join any existing rooms or create one yourself. </li> 
 
 ## Sentiment Analysis of chats
 <div align="center">
